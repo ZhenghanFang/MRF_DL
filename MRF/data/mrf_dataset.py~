@@ -1,0 +1,147 @@
+# import os.path
+# import torchvision.transforms as transforms
+# from data.base_dataset import BaseDataset, get_transform
+from data.base_dataset import BaseDataset
+# from data.image_folder import make_dataset
+# from PIL import Image
+# import PIL
+import h5py
+import random
+import torch
+import numpy
+
+class MRFDataset(BaseDataset):
+    def initialize(self, opt):
+
+        with open(self.A_paths_file, 'r') as f:
+            self.A_paths = f.read()
+        self.A_paths = self.A_paths.replace('\n',' ').split()
+        
+        
+        self.A_imgs = []
+        self.B_imgs = []
+        self.masks = []
+        
+        for A_path in self.A_paths:
+            # A_path1 = '/raid/zhenghan/data/MRF/data/'+A_path+'.mat'
+            original = True
+            if not original:
+                A_path1 = '/shenlab/lab_stor/zhenghan/data/MRF/data/'+A_path+'.mat'
+                f = h5py.File(A_path1)
+                A_img = numpy.transpose(f['imMRF']).astype('float32')
+            else:
+                A_path1 = '/shenlab/lab_stor/zhenghan/data/MRF/data_original/'+A_path+'.mat'
+                f = h5py.File(A_path1)
+                A_img = numpy.transpose(f['imMRF'])
+                A_img = numpy.concatenate((A_img['real'],A_img['imag']), axis=2).astype('float32')
+            
+            #B_img = numpy.transpose(f['goal']).astype('float32')
+            mask = numpy.transpose(f['mask']).astype('float32')
+            f.close()
+            
+            
+            
+            '''
+            if opt.goal_type == 'T2':
+                A_path2='/raid/zhenghan/data/MRF/dataT2/'+A_path+'_T2.mat'
+                #print(A_path2)
+                f = h5py.File(A_path2)
+                B_img = numpy.transpose(f['t2big']).astype('float32')
+                maskT2 = numpy.transpose(f['maskT2']).astype('float32')
+                
+                f.close()
+                mask = mask*maskT2
+                
+                
+            if opt.goal_type == 'T1':
+                A_path2='/raid/zhenghan/data/MRF/dataT1/'+A_path+'_T1.mat'
+                
+                f = h5py.File(A_path2)
+                B_img = numpy.transpose(f['t1big']).astype('float32')
+                maskT1 = numpy.transpose(f['maskT1']).astype('float32')
+                
+                f.close()
+                mask = mask*maskT1
+            '''
+                
+            # f = h5py.File('/raid/zhenghan/data/MRF/goals/'+A_path+'.mat')
+            f = h5py.File('/shenlab/lab_stor/zhenghan/data/MRF/goals/'+A_path+'.mat')
+            if opt.goal_type == 'T1':
+                B_img = numpy.transpose(f['t1big']).astype('float32')
+                B_img = B_img/5000
+            elif opt.goal_type == 'T2':
+                B_img = numpy.transpose(f['t2big']).astype('float32')
+                B_img = B_img/500
+            f.close()
+            
+            
+            A_img = A_img[53:201,58:229,:]
+            B_img = B_img[53:201,58:229]
+            mask = mask[53:201,58:229]
+            
+            
+            A_img = numpy.concatenate((A_img[:,:,0:int(opt.input_nc/2)],A_img[:,:,2304:2304+int(opt.input_nc/2)]), axis=2)
+            
+            mask = mask[:,:,numpy.newaxis]
+            if B_img.ndim==2:
+                B_img = B_img[:,:,numpy.newaxis]
+            assert A_img.ndim==3 and B_img.ndim==3, "# of dim is not 3 for training image"
+            
+            A_img = torch.from_numpy(A_img)
+            B_img = torch.from_numpy(B_img)
+            mask = torch.from_numpy(mask)
+            
+            if opt.data_GPU:
+                A_img = A_img.cuda()
+                B_img = B_img.cuda()
+                mask = mask.cuda()
+            
+
+            A_img = A_img.permute(2,0,1)
+            B_img = B_img.permute(2,0,1)
+            mask = mask.permute(2,0,1)
+            
+            
+            self.A_imgs.append(A_img)
+            self.B_imgs.append(B_img)
+            self.masks.append(mask)
+            print("loaded image: %s" % A_path)
+            
+            
+        self.num_imgs = len(self.A_paths)
+        
+
+
+
+    def __getitem__(self, index):
+        
+        index_A = index % self.num_imgs
+        A_path = self.A_paths[index_A]
+        A_img = self.A_imgs[index_A]
+        B_img = self.B_imgs[index_A]
+        mask = self.masks[index_A]
+        
+        if self.patchSize != 0:
+            # random crop
+            
+            patch_size = self.patchSize
+            
+            A_position0, A_position1 = random.randint(0,A_img.shape[1]-patch_size), random.randint(0,A_img.shape[2]-patch_size)
+            
+            A_img = A_img[:, A_position0:A_position0+patch_size, A_position1:A_position1+patch_size]
+            B_img = B_img[:, A_position0:A_position0+patch_size, A_position1:A_position1+patch_size]
+            mask = mask[:, A_position0:A_position0+patch_size, A_position1:A_position1+patch_size]
+            
+        return {'A': A_img, 'B': B_img, 'mask': mask,
+                'A_paths': A_path}
+
+    def __len__(self):
+        if self.patchSize == 0:
+            return self.num_imgs
+        else:
+            return int(self.num_imgs*(self.A_imgs[0].shape[1]*self.A_imgs[0].shape[2])/(self.patchSize**2))
+        
+        
+
+    def name(self):
+        return 'MRFDataset'

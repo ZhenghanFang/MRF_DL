@@ -1,0 +1,154 @@
+import numpy as np
+import torch
+import os
+from collections import OrderedDict
+from torch.autograd import Variable
+import itertools
+import util.util as util
+# from util.image_pool import ImagePool
+from .base_model import BaseModel
+from . import networks
+import sys
+
+
+class SimpleModel(BaseModel):
+    def name(self):
+        return 'Simple Model'
+
+    def initialize(self, opt):
+        BaseModel.initialize(self, opt)
+
+        nb = opt.batchSize
+        self.input_A = self.Tensor(nb, opt.input_nc, 1, 1)
+        self.input_B = self.Tensor(nb, opt.output_nc, 1, 1)
+        self.input_mask = self.Tensor(nb, 1, 1, 1)
+
+        # load/define networks
+        # The naming conversion is different from those used in the paper
+        # Code (paper): G_A (G), G_B (F), D_A (D_Y), D_B (D_X)
+
+        self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
+                                        opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
+        
+        
+        if not self.isTrain or opt.continue_train:
+            which_epoch = opt.which_epoch
+            self.load_network(self.netG_A, 'G_A', which_epoch)
+
+        if self.isTrain:
+            # self.old_lr = opt.lr
+            # define loss functions
+            self.criterion = torch.nn.MSELoss()
+            # initialize optimizers
+            params = list(self.netG_A.parameters())
+            
+            self.optimizers = []
+            self.optimizers.append( torch.optim.Adam((x for x in params[1:]), lr=opt.lr, betas=(opt.beta1, 0.999)) )
+            if opt.PCA:
+                self.optimizers.append( torch.optim.Adam((x for x in params[0:1]), lr=0, betas=(opt.beta1, 0.999)) )
+            
+            self.schedulers = []
+            for optimizer in self.optimizers:
+                self.schedulers.append(networks.get_scheduler(optimizer, opt))
+
+        print('---------- Networks initialized -------------')
+        networks.print_network(self.netG_A)
+        print('-----------------------------------------------')
+
+    def set_input(self, input):
+        input_A = input['A']
+        input_B = input['B']
+        input_mask = input['mask']
+        self.input_A.resize_(input_A.size()).copy_(input_A)
+        self.input_B.resize_(input_B.size()).copy_(input_B)
+        self.input_mask.resize_(input_mask.size()).copy_(input_mask)
+        self.image_paths = input['A_paths']
+        
+
+    def forward(self):
+        self.real_A = Variable(self.input_A)
+        self.ground_B = Variable(self.input_B)
+        self.var_mask = Variable(self.input_mask)
+
+    def test(self):
+        self.real_A = Variable(self.input_A, volatile=True)
+        self.ground_B = Variable(self.input_B, volatile=True)
+        self.var_mask = Variable(self.input_mask, volatile=True)
+        self.netG_A.eval()
+        self.fake_B = self.netG_A.forward(self.real_A)
+        self.loss = (((((self.fake_B-self.ground_B)/self.ground_B)**2)*self.var_mask).sum()/self.var_mask.sum())
+        self.rmseloss = self.loss**0.5
+        # self.absloss = (((((self.fake_B-self.ground_B)/self.ground_B).abs())*self.var_mask).sum()/self.var_mask.sum())
+        dif = ((self.fake_B-self.ground_B)/self.ground_B).abs()
+        self.absloss = (dif*self.var_mask).sum()/self.var_mask.sum()
+        '''
+        if self.opt.isTrain==False or True:
+            import scipy.io as sio
+            sio.savemat(self.opt.checkpoints_dir+'/'+self.opt.name+'/'+'1.mat',{'fake_B':self.fake_B.data.cpu().float().numpy()})
+            print(self.loss.data[0])
+        '''
+        self.netG_A.train()
+
+    # get image paths
+    def get_image_paths(self):
+        return self.image_paths
+
+    def backward_G(self):
+        #print(self.var_mask.data.sum())
+        
+        if self.var_mask.data.sum()>0:
+            self.fake_B = self.netG_A.forward(self.real_A)
+            self.loss = ((((self.fake_B-self.ground_B)/self.ground_B)**2)*self.var_mask).sum()/self.var_mask.sum()
+            # self.loss = (((self.fake_B-self.ground_B)**2)*self.var_mask).sum()/self.var_mask.sum()
+            # self.loss = self.criterion(self.fake_B, self.ground_B)
+            
+            self.rmseloss = self.loss**0.5
+            
+            dif = ((self.fake_B-self.ground_B)/self.ground_B).abs()
+            self.absloss = (dif*self.var_mask).sum()/self.var_mask.sum()
+            # self.backloss = self.absloss
+            # nonorm abs
+            # self.backloss = (((((self.fake_B-self.ground_B)).abs())*self.var_mask).sum()/self.var_mask.sum())
+            # focal gamma=1
+            # self.backloss = (((((self.fake_B-self.ground_B)**2/self.ground_B).abs())*self.var_mask).sum()/self.var_mask.sum())
+            # msre, L2 relative err loss
+            # self.backloss = self.loss
+            # L1.5 relative err loss
+            self.backloss = ((dif**1.5)*self.var_mask).sum()/self.var_mask.sum()
+            # anti-fluctuation L1 relative err loss
+            # lab = (dif>0.01).type_as(dif)
+            # self.backloss = (dif * lab * self.var_mask).sum() / (lab * self.var_mask).sum()
+            self.backloss.backward()
+        else:
+            self.loss = (0*self.real_A).sum()
+            # print('000000000000000000000000')
+
+    def optimize_parameters(self):
+        # forward
+        self.forward()
+        # G_A
+        for optimizer in self.optimizers:
+            optimizer.zero_grad()
+        self.backward_G()
+        for optimizer in self.optimizers:
+            optimizer.step()
+
+    def get_current_errors(self):
+        return OrderedDict([('loss',self.loss.data[0]),('rmseloss',self.rmseloss.data[0]),('absloss',self.absloss.data[0])])
+        
+    def get_current_visuals(self):
+        '''
+        # real_A = util.tensor2im(self.real_A.data)
+        fake_B = util.tensor2im((self.fake_B.data+1)*self.input_mask-1)
+        err = (self.fake_B.data-self.input_B).abs()*self.input_mask - 1
+        err = util.tensor2im(err)
+        ground_B = util.tensor2im((self.input_B+1)*self.input_mask-1)
+        return OrderedDict([('fake_B', fake_B),('err', err), ('ground_B', ground_B)])
+        '''
+        fake_B = self.fake_B.data.cpu().float().numpy()
+        ground_B = self.ground_B.data.cpu().float().numpy()
+        mask = self.var_mask.data.cpu().float().numpy()
+        return OrderedDict([('fake_B', fake_B),('ground_B', ground_B), ('mask', mask)])
+
+    def save(self, label):
+        self.save_network(self.netG_A, 'G_A', label, self.gpu_ids)

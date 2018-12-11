@@ -1,0 +1,24 @@
+python \
+test.py \
+--dataset single_dataset \
+--name hoppe_sub5 \
+--no_dropout \
+--input_nc 1152 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 1 \
+--patchSize 0 \
+--which_model_netG Hoppe \
+--patchStride 32 \
+--temp 46 \
+--FNN_depth 4 \
+--FNN_decrease 0 \
+--data_norm energy \
+--Unet_struc 3ds \
+--PreNetwork_path /Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_0412newdata/FC_46_T1152/final_net_G_A.pth \
+--test_i 5 \
+--checkpoints_dir /Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_0412newdata/ \
+--nThreads 0 \
+--results_dir /Users/zhenghanfang/raid/zhenghan/results \
+--which_epoch latest \
+--onMAC \

@@ -1,0 +1,17 @@
+python \
+train.py \
+--new_data_format \
+--data_norm non \
+--name PCA_170 \
+--no_dropout \
+--input_nc 170 \
+--niter 200 \
+--niter_decay 200 \
+--save_epoch_freq 200 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 32 \
+--patchSize 64 \
+--which_model_netG Unet_T1T2 \
+--patchStride 32 \
+--augmentation \

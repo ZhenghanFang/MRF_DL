@@ -1,0 +1,17 @@
+python \
+train.py \
+--dataset single_dataset \
+--name hoppe_sub6 \
+--no_dropout \
+--input_nc 1152 \
+--niter 100 \
+--niter_decay 100 \
+--save_epoch_freq 100 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 2 \
+--patchSize 32 \
+--which_model_netG Hoppe \
+--patchStride 32 \
+--data_norm energy \
+--test_i 6 \

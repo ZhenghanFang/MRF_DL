@@ -1,0 +1,15 @@
+python \
+train.py \
+--train_paths A \
+--val_paths B \
+--name T1_L1ae \
+--no_dropout \
+--input_nc 4608 \
+--goal_type T1 \
+--which_model_netG simple_conv_small \
+--norm batch \
+--batchSize 32 \
+--patchSize 32 \
+--continue_train \
+--epoch_count 6823 \
+--criterion nonorm_abs \

@@ -1,0 +1,389 @@
+import torch
+import torch.nn as nn
+from torch.nn import init
+import functools
+from torch.autograd import Variable
+from torch.optim import lr_scheduler
+import numpy as np
+import h5py
+
+
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        m.weight.data.normal_(0.0, 0.02)
+        if hasattr(m.bias, 'data'):
+            m.bias.data.fill_(0)
+    elif classname.find('BatchNorm2d') != -1:
+        m.weight.data.normal_(1.0, 0.02)
+        m.bias.data.fill_(0)
+
+def weights_init_PCA(net, opt):
+    V_path = '/shenlab/lab_stor/zhenghan/data/MRF/V.mat'
+    f = h5py.File(V_path)
+    V = np.transpose(f['V'])
+    f.close()
+    V = V[0:int(opt.input_nc/2),0:opt.PCA_n]
+    V1 = np.concatenate((V['real'], V['imag']), axis=0)
+    V2 = np.concatenate((-V['imag'], V['real']), axis=0)
+    V = np.concatenate((V1, V2), axis=1)
+    V = V.transpose()
+    V = V[:, :, np.newaxis, np.newaxis]
+    V = torch.from_numpy(V.astype('float32'))
+    
+    m = net.model[0]
+    classname = m.__class__.__name__
+    m.weight.data.copy_(V)
+    # print(m.weight.data)
+    if hasattr(m.bias, 'data'):
+        raise ValueError('PCA layer has bias')
+
+def get_norm_layer(norm_type='instance'):
+    if norm_type == 'batch':
+        norm_layer = functools.partial(nn.BatchNorm2d, affine=True)
+    elif norm_type == 'instance':
+        norm_layer = functools.partial(nn.InstanceNorm2d, affine=False)
+    else:
+        raise NotImplementedError('normalization layer [%s] is not found' % norm)
+    return norm_layer
+
+def get_scheduler(optimizer, opt):
+    if opt.lr_policy == 'lambda':
+        def lambda_rule(epoch):
+            lr_l = 1.0 - max(0, epoch + opt.epoch_count - opt.niter) / float(opt.niter_decay)
+            return lr_l
+        scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule)
+    elif opt.lr_policy == 'step':
+        scheduler = lr_scheduler.StepLR(optimizer, step_size=opt.lr_decay_iters, gamma=0.1)
+    elif opt.lr_policy == 'plateau':
+        scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.2, threshold=0.01, patience=5)
+    else:
+        return NotImplementedError('learning rate policy [%s] is not implemented', opt.lr_policy)
+    return scheduler
+
+
+
+def define_G(opt, input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropout=False, gpu_ids=[]):
+    netG = None
+    use_gpu = len(gpu_ids) > 0
+    norm_layer = get_norm_layer(norm_type=norm)
+
+    if use_gpu:
+        assert(torch.cuda.is_available())
+
+    if which_model_netG == 'simple_conv':
+        netG = SimpleCNN(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'simple_conv_large':
+        netG = SimpleCNN_large(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'simple_conv_larger':
+        netG = SimpleCNN_larger(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'simple_conv_small':
+        netG = SimpleCNN_small(opt, input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'simple_conv_small_PCA':
+        netG = SimpleCNN_small_PCA(opt, input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'nn':
+        netG = SimpleNN(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'nn_large':
+        netG = SimpleNN_large(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    else:
+        raise NotImplementedError('Generator model name [%s] is not recognized' % which_model_netG)
+    if len(gpu_ids) > 0:
+        netG.cuda(device_id=gpu_ids[0])
+    netG.apply(weights_init)
+    if opt.PCA:
+        weights_init_PCA(netG, opt)
+    return netG
+
+def print_network(net):
+    num_params = 0
+    for param in net.parameters():
+        num_params += param.numel()
+    print(net)
+    print('Total number of parameters: %d' % num_params)
+
+
+# Defines the generator that consists of Resnet blocks between a few
+# downsampling/upsampling operations.
+# Code and idea originally from Justin Johnson's architecture.
+# https://github.com/jcjohnson/fast-neural-style/
+class SimpleCNN(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleCNN, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+
+        model += [
+                  nn.Conv2d(input_nc, ngf, kernel_size=3, padding=1,
+                            bias=use_bias),
+                  norm_layer(ngf),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(ngf, ngf, kernel_size=3,
+                                padding=1, bias=use_bias),
+                  norm_layer(ngf),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(ngf, output_nc, kernel_size=3, padding=1)]
+        model += [nn.Tanh()]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+
+class SimpleCNN_larger(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleCNN_larger, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+        model += [
+                  nn.Conv2d(input_nc, 4096, kernel_size=1, padding=0,
+                            bias=use_bias),
+                  norm_layer(4096),
+                  nn.ReLU(True)]
+
+        model += [
+                  nn.Conv2d(4096, 1024, kernel_size=3, padding=1,
+                            bias=use_bias),
+                  norm_layer(1024),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(1024, 512, kernel_size=3,
+                                padding=1, bias=use_bias),
+                  norm_layer(512),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(512, output_nc, kernel_size=3, padding=1)]
+        #model += [nn.Tanh()]
+
+        self.model = nn.Sequential(*model)
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+            
+
+class SimpleCNN_large(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleCNN_large, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+
+        model += [
+                  nn.Conv2d(input_nc, 512, kernel_size=3, padding=1,
+                            bias=use_bias),
+                  norm_layer(512),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(512, 256, kernel_size=3,
+                                padding=1, bias=use_bias),
+                  norm_layer(256),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(256, output_nc, kernel_size=3, padding=1)]
+        #model += [nn.Tanh()]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+            
+            
+class SimpleCNN_small(nn.Module):
+    def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleCNN_small, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+
+        model += [
+                  nn.Conv2d(input_nc, 1024, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(1024),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(1024, 256, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(256),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(256, output_nc, kernel_size=3, padding=1)]
+        
+        
+        
+        #model += [nn.Tanh()]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+
+class SimpleCNN_small_PCA(nn.Module):
+    def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleCNN_small_PCA, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        PCA_n = opt.PCA_n
+        
+        model = []
+        
+        model += [nn.Conv2d(input_nc, PCA_n*2, kernel_size=1, padding=0, bias=False)]
+
+        model += [
+                  nn.Conv2d(PCA_n*2, 1024, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(1024),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(1024, 256, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(256),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(256, output_nc, kernel_size=3, padding=1)]
+        
+        
+        
+        #model += [nn.Tanh()]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            # a=nn.parallel.data_parallel(self.model[0], input, self.gpu_ids)
+            # print(a.data.shape)
+            # print(a.data[0,2,10,10])
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+
+
+
+class SimpleNN(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleNN, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        #self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+
+        model += [
+                  nn.Conv2d(input_nc, 1024, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(1024),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(1024, 512, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(512),
+                  nn.ReLU(True)]
+        model += [nn.Conv2d(512, 256, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(256),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(256, output_nc, kernel_size=1, padding=0)]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)
+
+class SimpleNN_large(nn.Module):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(SimpleNN_large, self).__init__()
+        self.input_nc = input_nc
+        self.output_nc = output_nc
+        #self.ngf = ngf
+        self.gpu_ids = gpu_ids
+        
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        
+        
+        model = []
+
+        model += [
+                  nn.Conv2d(input_nc, 2048, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(2048),
+                  nn.ReLU(True)]
+        
+        model += [nn.Conv2d(2048, 1024, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(1024),
+                  nn.ReLU(True)]
+        model += [nn.Conv2d(1024, 512, kernel_size=1, padding=0, bias=use_bias),
+                  norm_layer(512),
+                  nn.ReLU(True)]
+
+        model += [nn.Conv2d(512, output_nc, kernel_size=1, padding=0)]
+
+        self.model = nn.Sequential(*model)
+
+    def forward(self, input):
+        if self.gpu_ids and isinstance(input.data, torch.cuda.FloatTensor):
+            return nn.parallel.data_parallel(self.model, input, self.gpu_ids)
+        else:
+            return self.model(input)

@@ -1,0 +1,23 @@
+python \
+train.py \
+--dataset single_dataset \
+--name Uni_46_0ds \
+--no_dropout \
+--input_nc 1152 \
+--niter 200 \
+--niter_decay 200 \
+--save_epoch_freq 200 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 32 \
+--patchSize 64 \
+--which_model_netG UniNet \
+--patchStride 32 \
+--temp 46 \
+--FNN_depth 4 \
+--FNN_decrease 0 \
+--data_norm energy \
+--Unet_struc 0ds \
+--PreNetwork_path /shenlab/lab_stor/zhenghan/checkpoints/FC_46/final_net_G_A.pth \
+--augmentation \
+--test_i 5 \

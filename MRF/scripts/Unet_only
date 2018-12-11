@@ -1,0 +1,16 @@
+python \
+train.py \
+--dataset single_dataset \
+--name NoFE \
+--no_dropout \
+--input_nc 1152 \
+--niter 200 \
+--niter_decay 200 \
+--save_epoch_freq 200 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 32 \
+--patchSize 64 \
+--which_model_netG Unet_T1T2_3ds \
+--patchStride 32 \
+--augmentation \

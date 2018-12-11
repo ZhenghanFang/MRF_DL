@@ -1,0 +1,18 @@
+python \
+train.py \
+--name sub_0 \
+--PCA \
+--lr_PCA 0.0 \
+--data_norm non \
+--no_dropout \
+--input_nc 1152 \
+--niter 100 \
+--niter_decay 100 \
+--save_epoch_freq 100 \
+--goal_type T1T2 \
+--norm batch \
+--batchSize 32 \
+--patchSize 64 \
+--which_model_netG Unet_PCA_small \
+--patchStride 32 \
+--augmentation \
