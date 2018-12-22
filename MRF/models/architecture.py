@@ -2969,12 +2969,12 @@ class hoppe_ISMRM2018(nn.Module):
         # calculate magnitude
         if magnitude:
             input_view = (input_view[:,0,:] ** 2 + input_view[:,1,:] ** 2) ** 0.5
-            input_view = input_view.unsqueeze(1).contiguous()
+            input_view = input_view.unsqueeze(1)
 
         a = self.model_convpool(input_view)
         a = a.view(a.shape[0], -1)
         a = self.model_fc(a)
-        a = a.permute(1, 0).contiguous().view(self.output_nc, input.shape[0], input.shape[2], input.shape[3]).permute(1, 0, 2, 3)
+        a = a.permute(1, 0).contiguous().view(self.output_nc, input.shape[0], input.shape[2], input.shape[3]).permute(1, 0, 2, 3).contiguous()
         return a
 
 class Cohen_struc(nn.Module):
