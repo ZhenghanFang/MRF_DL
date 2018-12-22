@@ -2969,7 +2969,7 @@ class hoppe_ISMRM2018(nn.Module):
         # calculate magnitude
         if magnitude:
             input_view = (input_view[:,0,:] ** 2 + input_view[:,1,:] ** 2) ** 0.5
-            input_view = input_view.unsqueeze(1)
+            input_view = input_view.unsqueeze(1).contiguous()
 
         a = self.model_convpool(input_view)
         a = a.view(a.shape[0], -1)
