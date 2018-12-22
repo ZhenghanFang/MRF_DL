@@ -2911,7 +2911,7 @@ class hoppe_ISMRM2018(nn.Module):
     def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
         super(hoppe_ISMRM2018, self).__init__()
         self.opt = opt
-        self.magnitude = False
+        self.magnitude = True
         if self.magnitude:
             self.input_nc = 1
         else:
