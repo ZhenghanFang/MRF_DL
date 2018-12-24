@@ -15,6 +15,7 @@ import shutil
 from data import getDataset
 from models import getModel
 
+torch.backends.cudnn.enabled = False
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', type=str, default='hoppe_ISMRM2018_ar4_mag', help='name of the experiment. It decides where to store samples and models')
