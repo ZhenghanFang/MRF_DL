@@ -31,7 +31,7 @@ parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in fir
 #    parser.add_argument('--ndf', type=int, default=64, help='# of discrim filters in first conv layer')
 #    parser.add_argument('--which_model_netD', type=str, default='basic', help='selects model to use for netD')
 parser.add_argument('--model', type=str, default='SimpleModel', help='selects main model')
-parser.add_argument('--which_model_netG', type=str, default='Hoppe', help='selects model to use for netG')
+parser.add_argument('--which_model_netG', type=str, default='UniNet_init', help='selects model to use for netG')
 parser.add_argument('--Unet_struc', type=str, default='3ds', help='Unet structure')
 parser.add_argument('--FNN_depth', type=int, default=4, help='depth of FNN')
 parser.add_argument('--num_D', type=int, default=46, help='# of features')
