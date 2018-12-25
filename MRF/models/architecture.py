@@ -2946,10 +2946,15 @@ class hoppe_ISMRM2018(nn.Module):
         in_feat = 600
         model_fc = [
             nn.Linear(in_feat, 1000),
+            nn.ReLU(True),
             nn.Linear(1000, 500),
+            nn.ReLU(True),
             nn.Linear(500, 500),
+            nn.ReLU(True),
             nn.Linear(500, 300),
+            nn.ReLU(True),
             nn.Linear(300, 300),
+            nn.ReLU(True),
             nn.Linear(300, self.output_nc)
         ]
 
