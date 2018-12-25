@@ -203,7 +203,7 @@ class MRFDataset(BaseDataset):
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/'
         person_path = ['20180206data/180114','20180206data/180124','20180206data/180131_1','20180206data/180131_2','20180206data/180202','newMRFData_041218/180408_1','newMRFData_041218/180408_2']
         slice_N = [12,12,12,12,12,10,12]
-        slice_N = [1,1,1,1,1,1,1]
+        # slice_N = [1,1,1,1,1,1,1]
         test_i = opt.test_i
         if opt.set_type == 'train':
             person = list(range(1,test_i))+list(range(test_i+1,7))
