@@ -2554,6 +2554,20 @@ class Net_1by1_struc(nn.Module):
 
     def forward(self, input):
         return self.model(input)
+    
+class FNN(nn.Module):
+    def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
+        super(FNN, self).__init__()
+        self.gpu_ids = gpu_ids
+
+        self.model_T1 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        self.model_T2 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+
+    def forward(self, input):
+        T1 = self.model_T1(input)
+        T2 = self.model_T2(input)
+        return torch.cat([T1, T2], 1)
+    
 
 class SQ_module(nn.Module):
     def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
