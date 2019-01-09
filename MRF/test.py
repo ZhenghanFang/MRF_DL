@@ -16,7 +16,7 @@ from models import getModel
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--saved_model_path', type=str, default='/Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_0412newdata/Cohen_dict_ar4/final_net_G_A.pth', help='path of model')
+parser.add_argument('--saved_model_path', type=str, default='/Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_simu/simu_ar4/final_net_G_A.pth', help='path of model')
 # parser.add_argument('--name', type=str, default='motion_fix', help='name of the experiment. It decides where to store samples and models')
 parser.add_argument('--input_nc', type=int, default=int(2304/4*2), help='# of input image channels')
 parser.add_argument('--output_nc', type=int, default=1, help='# of output image channels')
@@ -24,7 +24,7 @@ parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in fir
 #    parser.add_argument('--ndf', type=int, default=64, help='# of discrim filters in first conv layer')
 #    parser.add_argument('--which_model_netD', type=str, default='basic', help='selects model to use for netD')
 parser.add_argument('--model', type=str, default='SimpleModel', help='selects main model')
-parser.add_argument('--which_model_netG', type=str, default='Cohen_struc', help='selects model to use for netG')
+parser.add_argument('--which_model_netG', type=str, default='UniNet_init', help='selects model to use for netG')
 parser.add_argument('--Unet_struc', type=str, default='3ds', help='Unet structure')
 parser.add_argument('--FNN_depth', type=int, default=4, help='depth of FNN')
 parser.add_argument('--num_D', type=int, default=64, help='# of features')
@@ -32,7 +32,7 @@ parser.add_argument('--FNN_decrease', type=int, default=0, help='FNN features de
 parser.add_argument('--criterion', type=str, default='L1re', help='backloss criterion')
 #    parser.add_argument('--n_layers_D', type=int, default=3, help='only used if which_model_netD==n_layers')
 #    parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
-parser.add_argument('--dataset', type=str, default='single_dataset_2', help='chooses how datasets are loaded. [mrf_dataset | single_dataset]')
+parser.add_argument('--dataset', type=str, default='single_dataset', help='chooses how datasets are loaded. [mrf_dataset | single_dataset]')
 parser.add_argument('--half', action='store_true', default=True, help='Half precision data (float16)?')
 #    parser.add_argument('--model', type=str, default='cycle_gan', help='chooses which model to use. cycle_gan, pix2pix, test')
 # parser.add_argument('--checkpoints_dir', type=str, default='.', help='models are saved here')
