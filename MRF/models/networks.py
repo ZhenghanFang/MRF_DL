@@ -108,6 +108,8 @@ def define_G(opt, input_nc, output_nc, ngf, which_model_netG, norm='batch', use_
         netG = hoppe_ISMRM2018(opt, input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
     elif which_model_netG == 'Cohen_struc':
         netG = Cohen_struc(opt, input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
+    elif which_model_netG == 'FNN':
+        netG = FNN(opt, input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
     else:
         raise NotImplementedError('Generator model name [%s] is not recognized' % which_model_netG)
     if len(gpu_ids) > 0:
