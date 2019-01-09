@@ -62,7 +62,7 @@ parser.add_argument('--gan', action='store_true', default=False, help='use gan?'
 opt = parser.parse_args()
 opt.isTrain = False
 opt.model_name = os.path.basename(os.path.dirname(opt.saved_model_path))
-opt.results_dir = os.path.join(os.path.dirname(opt.saved_model_path), opt.model_name + opt.name + '_test')
+opt.results_dir = os.path.join(os.path.dirname(opt.saved_model_path), opt.model_name + '_' + opt.name + '_test')
 args = vars(opt)
 print('------------ Options -------------')
 for k, v in sorted(args.items()):
