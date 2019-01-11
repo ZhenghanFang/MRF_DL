@@ -17,7 +17,7 @@ from models import getModel
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--saved_model_path', type=str, default='/Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_simu/simu_ar4/final_net_G_A.pth', help='path of model')
-parser.add_argument('--name', type=str, default='simudata', help='name of the experiment. It decides where to store samples and models')
+parser.add_argument('--data_name', type=str, default='simudata', help='name of the dataset.')
 parser.add_argument('--input_nc', type=int, default=int(2304/4*2), help='# of input image channels')
 parser.add_argument('--output_nc', type=int, default=1, help='# of output image channels')
 parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in first conv layer')
@@ -62,7 +62,7 @@ parser.add_argument('--gan', action='store_true', default=False, help='use gan?'
 opt = parser.parse_args()
 opt.isTrain = False
 opt.model_name = os.path.basename(os.path.dirname(opt.saved_model_path))
-opt.results_dir = os.path.join(os.path.dirname(opt.saved_model_path), opt.model_name + '_' + opt.name + '_test')
+opt.results_dir = os.path.join(os.path.dirname(opt.saved_model_path), opt.model_name + '_' + opt.data_name + '_test')
 args = vars(opt)
 print('------------ Options -------------')
 for k, v in sorted(args.items()):
