@@ -27,6 +27,23 @@ class MRFDataset(BaseDataset):
 
     def read_mask(self, file):
         return file['immask'][:]
+    
+    def preprocess_imMRF(self, imMRF, flip=True):
+        if flip:
+            # preprocess with flipping to align with ground truth tissue maps
+            imMRF = imMRF[:, ::-1, ::-1]
+        # imMRF = numpy.flip(numpy.flip(imMRF,1),2)
+        A_img = imMRF
+        A_img = numpy.concatenate((A_img['real'], A_img['imag']), axis=0).astype('float32')
+
+        # normalization
+        if self.opt.data_norm == 'non':
+            print("no normalization")
+        else:
+            A_img = A_img * 1e-5
+            t = numpy.mean(A_img ** 2, axis=0) * 2
+            A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
+        return A_img
 
     def get_paths(self):
         if self.opt.onMAC:
