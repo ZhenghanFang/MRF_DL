@@ -26,7 +26,7 @@ class MRFDataset(BaseDataset):
         return 'T1hT2_Dataset'
 
     def load_from_file(self, fileName, d_type):
-        file = h5py.File(fileName, 'r')
+        file = sio.loadmat(fileName, 'r')
         if d_type == 'imMRF':
             data = file['visual_result']['fake_B'][:] / numpy.array([[[5000], [500]]])
         elif d_type == 'Tmap':
