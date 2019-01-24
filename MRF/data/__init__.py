@@ -17,6 +17,8 @@ def getDataset(opt):
         from data.dict_dataset import MRFDataset
     elif opt.dataset == 'single_dataset_2':
         from data.single_dataset_2 import MRFDataset
+    elif opt.dataset == 'T1hT2_dataset':
+        from data.T1hT2_dataset import MRFDataset
     else:
         raise ValueError('dataset type %s not recognized' % opt.dataset)
     return MRFDataset
