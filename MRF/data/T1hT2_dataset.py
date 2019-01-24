@@ -45,7 +45,7 @@ class MRFDataset(BaseDataset):
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/'
         else:
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/Uni_46_T288/'
-        person_path = ['Uni_46_T288_sub1','Uni_46_T288_sub2','Uni_46_T288_sub3','Uni_46_T288_sub4','Uni_46_T288_sub5','Uni_46_T288_sub6']
+        person_path = ['Uni_46_T288_sub1_test','Uni_46_T288_sub2_test','Uni_46_T288_sub3_test','Uni_46_T288_sub4_test','Uni_46_T288_sub5_test','Uni_46_T288_sub6_test']
         slice_N = [12,12,12,12,12,10]
         # slice_N = [1,1,1,1,1,1]
         test_i = self.opt.test_i
