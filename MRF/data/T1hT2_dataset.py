@@ -31,7 +31,6 @@ class MRFDataset(BaseDataset):
         if d_type == 'imMRF':
             data = file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
         elif d_type == 'Tmap':
-            T1map, T2map = self.read_Tmap(file)
             data = file['visual_result']['ground_B'][0,0].transpose(2,1,0) / norm_factor - file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
         elif d_type == 'mask':
             data = file['visual_result']['mask'][0,0].transpose(2,1,0)
