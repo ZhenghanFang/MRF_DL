@@ -27,13 +27,14 @@ class MRFDataset(BaseDataset):
 
     def load_from_file(self, fileName, d_type):
         file = sio.loadmat(fileName, 'r')
+        norm_factor = numpy.array([[[5000]],[[500]]])
         if d_type == 'imMRF':
-            data = file['visual_result']['fake_B'][:] / numpy.array([[[5000], [500]]])
+            data = file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
         elif d_type == 'Tmap':
             T1map, T2map = self.read_Tmap(file)
-            data = file['visual_result']['ground_B'][:] / numpy.array([[[5000], [500]]]) - file['visual_result']['fake_B'][:] / numpy.array([[[5000], [500]]])
+            data = file['visual_result']['ground_B'][0,0].transpose(2,1,0) / norm_factor - file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
         elif d_type == 'mask':
-            data = file['visual_result']['mask'][:]
+            data = file['visual_result']['mask'][0,0].transpose(2,1,0)
         else:
             raise NotImplementedError('data type [%s] is not recognized' % d_type)
         if self.opt.half:
