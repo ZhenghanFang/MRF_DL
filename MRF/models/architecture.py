@@ -2675,8 +2675,8 @@ class Unet_double(nn.Module):
     def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
         super(Unet_double, self).__init__()
         self.gpu_ids = gpu_ids
-        self.model_T1 = Unet_2ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        self.model_T2 = Unet_2ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        self.model_T1 = Unet_2ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        self.model_T2 = Unet_2ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
 
     def forward(self, input):
         T1 = self.model_T1(input)
