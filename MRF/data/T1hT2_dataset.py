@@ -26,7 +26,7 @@ class MRFDataset(BaseDataset):
         return 'T1hT2_Dataset'
 
     def load_from_file(self, fileName, d_type):
-        file = sio.loadmat(fileName, 'r')
+        file = sio.loadmat(fileName)
         norm_factor = numpy.array([[[5000]],[[500]]])
         if d_type == 'imMRF':
             data = file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
