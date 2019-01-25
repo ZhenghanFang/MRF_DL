@@ -1097,6 +1097,8 @@ class Unet_3ds_rcab(nn.Module):
         # self.model = model
 
     def make_rcab(self, n_feat, n_block):
+        if n_block==1:
+            return RCAB(n_feat=n_feat)
         rcab_chain = []
         for i in range(n_block):
             rcab_chain.append(RCAB(n_feat=n_feat))
