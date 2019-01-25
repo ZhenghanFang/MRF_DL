@@ -25,7 +25,7 @@ class MRFDataset(BaseDataset):
         # self.augmentation = False
         self.augmentation_type = 'flip'
         self.goal_type = 'dict'
-        self.mask_type = 'large'
+        self.mask_type = opt.mask
 
         self.get_paths(opt)
         self.A_imgs = []
