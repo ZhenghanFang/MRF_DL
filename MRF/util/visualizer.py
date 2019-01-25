@@ -13,7 +13,7 @@ class Visualizer():
         self.use_html = opt.isTrain and not opt.no_html
         self.win_size = opt.display_winsize
         '''
-        self.name = opt.name
+        # self.name = opt.name
 
         '''
         if self.display_id > 0:
