@@ -131,6 +131,9 @@ class BaseDataset(data.Dataset):
         data = {}
         for k,v in data_path.items():
             data[k] = self.load_from_file(v, k)
+            
+        if self.opt.zerobg:
+            data['imMRF'] = data['imMRF'] * data['mask']
 
         # dataset_path = os.path.splitext(os.path.split(imMRF_path)[-1])[0]
         data['dataset_path'] = self.get_dataset_path(data_path)
