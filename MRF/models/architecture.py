@@ -1009,7 +1009,7 @@ class Unet_3ds_rcab(nn.Module):
         self.input_nc = input_nc
         self.output_nc = output_nc
         self.ngf = ngf
-        n_rcab = 3
+        n_rcab = 1
         
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
