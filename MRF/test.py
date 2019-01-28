@@ -16,6 +16,7 @@ from models import getModel
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--zerobg', action='store_true', default=False, help='set background signal as zero?')
 parser.add_argument('--saved_model_path', type=str, default='/Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_simu/simu_ar4/final_net_G_A.pth', help='path of model')
 parser.add_argument('--data_name', type=str, default='simudata', help='name of the dataset.')
 parser.add_argument('--input_nc', type=int, default=int(2304/4*2), help='# of input image channels')
