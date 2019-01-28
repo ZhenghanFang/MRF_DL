@@ -48,9 +48,9 @@ class MRFDataset(BaseDataset):
         if self.opt.onMAC:
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/'
         else:
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/rcab_zerobg/'
+            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/rcab_zerobg_ar8/'
         # person_path = ['Uni_46_T288_sub1_test','Uni_46_T288_sub2_test','Uni_46_T288_sub3_test','Uni_46_T288_sub4_test','Uni_46_T288_sub5_test','Uni_46_T288_sub6_test']
-        person_path = ['rcab_zerobg_sub1_test','rcab_zerobg_sub2_test','rcab_zerobg_sub3_test','rcab_zerobg_sub4_test','rcab_zerobg_sub5_test','rcab_zerobg_sub6_test']
+        person_path = ['rcab_zerobg_ar8_sub1_test','rcab_zerobg_ar8_sub2_test','rcab_zerobg_ar8_sub3_test','rcab_zerobg_ar8_sub4_test','rcab_zerobg_ar8_sub5_test','rcab_zerobg_ar8_sub6_test']
         slice_N = [12,12,12,12,12,10]
         # slice_N = [1,1,1,1,1,1]
         test_i = self.opt.test_i
