@@ -31,7 +31,7 @@ class MRFDataset(BaseDataset):
         if d_type == 'imMRF':
             data = file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
         elif d_type == 'Tmap':
-            self.predict_error = False
+            self.predict_error = True
             if self.predict_error:
                 data = file['visual_result']['ground_B'][0,0].transpose(2,1,0) / norm_factor - file['visual_result']['fake_B'][0,0].transpose(2,1,0) / norm_factor
             else:
@@ -48,8 +48,9 @@ class MRFDataset(BaseDataset):
         if self.opt.onMAC:
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/'
         else:
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/Uni_46_T288/'
-        person_path = ['Uni_46_T288_sub1_test','Uni_46_T288_sub2_test','Uni_46_T288_sub3_test','Uni_46_T288_sub4_test','Uni_46_T288_sub5_test','Uni_46_T288_sub6_test']
+            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/rcab_zerobg/'
+        # person_path = ['Uni_46_T288_sub1_test','Uni_46_T288_sub2_test','Uni_46_T288_sub3_test','Uni_46_T288_sub4_test','Uni_46_T288_sub5_test','Uni_46_T288_sub6_test']
+        person_path = ['rcab_zerobg_sub1_test','rcab_zerobg_sub2_test','rcab_zerobg_sub3_test','rcab_zerobg_sub4_test','rcab_zerobg_sub5_test','rcab_zerobg_sub6_test']
         slice_N = [12,12,12,12,12,10]
         # slice_N = [1,1,1,1,1,1]
         test_i = self.opt.test_i
