@@ -16,6 +16,7 @@ from models import getModel
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--T1hT2_predict_error', action='store_true', default=False, help='predict error or T2 map?')
 parser.add_argument('--T1hT2_dataroot', type=str, default='', help='data root for T1hT2')
 parser.add_argument('--zerobg', action='store_true', default=False, help='set background signal as zero?')
 parser.add_argument('--saved_model_path', type=str, default='/Users/zhenghanfang/raid/zhenghan/checkpoints/MRF_simu/simu_ar4/final_net_G_A.pth', help='path of model')
