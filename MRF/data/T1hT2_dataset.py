@@ -52,7 +52,7 @@ class MRFDataset(BaseDataset):
         d_root = d_root + self.opt.T1hT2_dataroot + '/'
         person_path = []
         for k in range(1,7):
-            person_path.append(opt.T1hT2_dataroot + '_sub' + str(k) + '_test')
+            person_path.append(self.opt.T1hT2_dataroot + '_sub' + str(k) + '_test')
         # person_path = ['Uni_46_T288_sub1_test','Uni_46_T288_sub2_test','Uni_46_T288_sub3_test','Uni_46_T288_sub4_test','Uni_46_T288_sub5_test','Uni_46_T288_sub6_test']
         # person_path = ['rcab_zerobg_ar8_sub1_test','rcab_zerobg_ar8_sub2_test','rcab_zerobg_ar8_sub3_test','rcab_zerobg_ar8_sub4_test','rcab_zerobg_ar8_sub5_test','rcab_zerobg_ar8_sub6_test']
         slice_N = [12,12,12,12,12,10]
