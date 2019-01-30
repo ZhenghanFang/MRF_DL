@@ -49,7 +49,7 @@ class MRFDataset(BaseDataset):
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/'
         else:
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/'
-        d_root = d_root + opt.T1hT2_dataroot + '/'
+        d_root = d_root + self.opt.T1hT2_dataroot + '/'
         person_path = []
         for k in range(1,7):
             person_path.append(opt.T1hT2_dataroot + '_sub' + str(k) + '_test')
