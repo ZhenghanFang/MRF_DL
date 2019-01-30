@@ -18,6 +18,7 @@ from models import getModel
 # torch.backends.cudnn.enabled = False
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--T1hT2_predict_error', action='store_true', default=False, help='predict error or T2 map?')
 parser.add_argument('--T1hT2_dataroot', type=str, default='', help='data root for T1hT2')
 parser.add_argument('--zerobg', action='store_true', default=False, help='set background signal as zero?')
 parser.add_argument('--name', type=str, default='hoppe_ISMRM2018_ar4_mag', help='name of the experiment. It decides where to store samples and models')
