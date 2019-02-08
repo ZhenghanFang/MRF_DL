@@ -51,9 +51,7 @@ class MRFDataset(BaseDataset):
         else:
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/simulate/SimulatedTrainingData_Noise5/'
         person_path = ['181007', '181012-1', '181012-2', '181014-1', '181014-2']
-        slice_path = [
-            [str(i) for i in range(155,174,2)]
-        ]
+        slice_path = [str(i) for i in range(155,174,2)]
         # slice_N = [10, 10, 10, 10, 10]
         # slice_N = [1,1,1,1,1,1]
         test_i = 0
