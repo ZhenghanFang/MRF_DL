@@ -23,7 +23,7 @@ class MRFDataset(BaseDataset):
         self.initialize_base(opt)
 
     def name(self):
-        return 'simulated_Dataset'
+        return 'simulated_Dataset_noise'
 
     def read_mask(self, file):
         return file['immask'][:]
@@ -47,55 +47,26 @@ class MRFDataset(BaseDataset):
 
     def get_paths(self):
         if self.opt.onMAC:
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20181017/SimulatedTrainingData/'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190130/SimulatedTrainingData_Noise5/'
         else:
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/simulate/SimulatedTrainingData/'
+            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/simulate/SimulatedTrainingData_Noise5/'
         person_path = ['181007', '181012-1', '181012-2', '181014-1', '181014-2']
         slice_path = [
-            [str(i) for i in range(110,129,2)],
-            [str(i) for i in range(106,125,2)],
-            [str(i) for i in range(136,155,2)],
-            [str(i) for i in range(123,142,2)],
             [str(i) for i in range(155,174,2)]
         ]
-        slice_N = [10, 10, 10, 10, 10]
+        # slice_N = [10, 10, 10, 10, 10]
         # slice_N = [1,1,1,1,1,1]
-        test_i = 4
+        test_i = 0
         if self.set_type == 'train':
-            person = list(range(0,test_i))+list(range(test_i+1,5))
+            slice = list(range(0,test_i)) + list(range(test_i+1,10))
         elif self.set_type == 'val':
-            person = list(range(test_i,test_i+1))
+            slice = list(range(test_i,test_i+1))
             
         self.data_paths = []
-        for i in range(len(person)):
-            for j in range(slice_N[person[i]]):
-                d_path = d_root + person_path[person[i]] + '/' + slice_path[person[i]][j] + '/'
-                self.data_paths.append({
-                    'imMRF': d_path + 'simu_imMRF.mat',
-                    'Tmap': d_path + 'simu_patternmatching.mat',
-                    'mask': d_path + 'simu_immask_resize.mat'
-                    })
-
-        # if self.set_type == 'val':
-        #     if self.opt.onMAC:
-        #         d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/'
-        #     else:
-        #         d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/'
-        #     person_path = ['20180206data/180114','20180206data/180124','20180206data/180131_1','20180206data/180131_2','20180206data/180202','newMRFData_041218/180408_1','newMRFData_041218/180408_2']
-        #     slice_N = [12,12,12,12,12,10,12]
-        #     # slice_N = [1,1,1,1,1,1,1]
-        #     test_i = 5
-        #     person = list(range(test_i,test_i+1))
-                
-        #     self.data_paths = []
-        #     for i in range(len(person)):
-        #         a = os.listdir(d_root+person_path[person[i]-1])
-        #         for p in a:
-        #             if p[0] == '.':
-        #                 a.remove(p)
-        #         for j in range(slice_N[person[i]-1]):
-        #             self.data_paths.append({
-        #             'imMRF': d_root+person_path[person[i]-1]+'/'+a[j]+'/imMRF.mat',
-        #             'Tmap': d_root+'PatternMatching_2304/sub_'+str(person[i])+'/'+str(j+1)+'/patternmatching.mat',
-        #             'mask': '/Users/zhenghanfang/Desktop/standard_MRF/'+'Data_Qian_skull_h5/'+str(person[i])+'/'+str(j+1)+'-skull.mat'
-        #             })
+        for j in range(len(slice)):
+            d_path = d_root + slice_path[j] + '/'
+            self.data_paths.append({
+                'imMRF': d_path + 'simu_imMRF_Noise_5.mat',
+                'Tmap': d_path + 'simu_patternmatching_Noise_5.mat',
+                'mask': d_path + 'simu_immask_Noise_5.mat'
+                })
