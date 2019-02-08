@@ -43,7 +43,7 @@ class MRFDataset(BaseDataset):
         ]
         slice_N = [4, 10, 10, 10, 10, 10]
         # slice_N = [1,1,1,1,1,1]
-        test_i = 3
+        test_i = 5
         if self.set_type == 'train':
             person = list(range(0,test_i))+list(range(test_i+1,6))
         elif self.set_type == 'val':
