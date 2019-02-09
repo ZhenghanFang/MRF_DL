@@ -221,6 +221,7 @@ class BaseDataset(data.Dataset):
             self.data[dataset_i]['imMRF'],
             self.data[dataset_i]['Tmap'])
         sample = self.extractPatch(patch_i_1, patch_i_2, patchSize, sample)
+        print(sample.shape)
         return sample
 
     def __len__(self):
