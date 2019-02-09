@@ -85,6 +85,7 @@ class BaseDataset(data.Dataset):
         return {k:v.copy() for k,v in sample.items()}
 
     def extractPatch(self, patch_i_1, patch_i_2, patchSize, sample):
+        print(patch_i_1, patch_i_2, patchSize)
         return {k:v[:, patch_i_1:patch_i_1+patchSize, patch_i_2:patch_i_2+patchSize] for k,v in sample.items()}
 
     def filter_patch_pos(self, mask, patchSize):
