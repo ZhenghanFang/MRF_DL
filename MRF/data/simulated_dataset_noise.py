@@ -24,9 +24,6 @@ class MRFDataset(BaseDataset):
 
     def name(self):
         return 'simulated_Dataset_noise'
-
-    def read_mask(self, file):
-        return file['immask'][:]
     
     def preprocess_imMRF(self, imMRF, flip=True):
         if flip:
