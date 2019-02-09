@@ -200,6 +200,9 @@ class BaseDataset(data.Dataset):
             if self.augmentation:
                 sample = self.augment_torch(sample)
                 # print('after aug', time.time()-start)
+        print(sample['input_G'].shape)
+        print(sample['label_G'].shape)
+        print(sample['mask'].shape)
 
         # sample = self.np_copy(sample)
         # print('after copy', time.time()-start)
@@ -221,7 +224,6 @@ class BaseDataset(data.Dataset):
             self.data[dataset_i]['imMRF'],
             self.data[dataset_i]['Tmap'])
         sample = self.extractPatch(patch_i_1, patch_i_2, patchSize, sample)
-        print(sample.shape)
         return sample
 
     def __len__(self):
