@@ -26,7 +26,6 @@ class MRFDataset(BaseDataset):
         return 'threeD_Dataset_2'
       
     def read_imMRF(self, file):
-        print(file['imMRF2d'][0:self.opt.input_nc//2])
         return file['imMRF2d'][0:self.opt.input_nc//2]
       
     def read_Tmap(self, file):
