@@ -143,10 +143,7 @@ class BaseDataset(data.Dataset):
         file = h5py.File(fileName, 'r')
         if d_type == 'imMRF':
             imMRF = self.read_imMRF(file)
-            print("load imMRF")
-            print(imMRF)
             data = self.preprocess_imMRF(imMRF, flip=self.flipimMRF)
-            print(data)
         elif d_type == 'Tmap':
             T1map, T2map = self.read_Tmap(file)
             data = self.preprocess_Tmap(T1map, T2map)
@@ -154,8 +151,6 @@ class BaseDataset(data.Dataset):
             data = self.preprocess_mask(self.read_mask(file))
         else:
             raise NotImplementedError('data type [%s] is not recognized' % d_type)
-        print(data)
-        print(d_type)
         if self.opt.half:
             data = data.astype('float16')
         return data
