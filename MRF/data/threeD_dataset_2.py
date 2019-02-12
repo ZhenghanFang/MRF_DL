@@ -34,16 +34,16 @@ class MRFDataset(BaseDataset):
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
-        print(imMRF.shape)
         imMRF = numpy.reshape(imMRF, (-1, imMRF.shape[2], imMRF.shape[3]), order='F')
-        print(imMRF)
         
         if flip:
             # preprocess with flipping to align with ground truth tissue maps
             imMRF = imMRF[:, ::-1, ::-1]
         # imMRF = numpy.flip(numpy.flip(imMRF,1),2)
         A_img = imMRF
+        print(imMRF['real'])
         A_img = numpy.concatenate((A_img['real'], A_img['imag']), axis=0).astype('float32')
+        
 
         # normalization
         if self.opt.data_norm == 'non':
