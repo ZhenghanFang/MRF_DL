@@ -152,6 +152,7 @@ class BaseDataset(data.Dataset):
             data = self.preprocess_mask(self.read_mask(file))
         else:
             raise NotImplementedError('data type [%s] is not recognized' % d_type)
+        print(data)
         if self.opt.half:
             data = data.astype('float16')
         return data
