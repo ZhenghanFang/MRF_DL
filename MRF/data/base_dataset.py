@@ -144,7 +144,9 @@ class BaseDataset(data.Dataset):
         if d_type == 'imMRF':
             imMRF = self.read_imMRF(file)
             print("load imMRF")
+            print(data)
             data = self.preprocess_imMRF(imMRF, flip=self.flipimMRF)
+            print(data)
         elif d_type == 'Tmap':
             T1map, T2map = self.read_Tmap(file)
             data = self.preprocess_Tmap(T1map, T2map)
