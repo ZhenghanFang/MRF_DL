@@ -153,6 +153,7 @@ class BaseDataset(data.Dataset):
         else:
             raise NotImplementedError('data type [%s] is not recognized' % d_type)
         print(data)
+        print(d_type)
         if self.opt.half:
             data = data.astype('float16')
         return data
