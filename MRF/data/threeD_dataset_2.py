@@ -41,16 +41,15 @@ class MRFDataset(BaseDataset):
             imMRF = imMRF[:, ::-1, ::-1]
         # imMRF = numpy.flip(numpy.flip(imMRF,1),2)
         A_img = imMRF
-        print(imMRF['real'])
         A_img = numpy.concatenate((A_img['real'], A_img['imag']), axis=0).astype('float32')
         
-
         # normalization
         if self.opt.data_norm == 'non':
             print("no normalization")
         else:
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
+        print(A_img)
 
     def get_paths(self):
         if self.opt.onMAC:
