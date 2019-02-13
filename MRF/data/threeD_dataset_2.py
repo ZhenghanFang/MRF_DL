@@ -26,17 +26,16 @@ class MRFDataset(BaseDataset):
         return 'threeD_Dataset_2'
       
     def read_imMRF(self, file):
-        print(self.opt.input_nc//2)
-        return file['imMRF2d'][0:self.opt.input_nc//2]
+        n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
+        print(n_timepoint)
+        return file['imMRF2d'][0:n_timepoint]
       
     def read_Tmap(self, file):
         return file['t1'][:], file['t2'][:]
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
-        print(imMRF.shape)
         imMRF = numpy.reshape(imMRF, (-1, imMRF.shape[2], imMRF.shape[3]), order='F')
-        print(imMRF.shape)
         
         if flip:
             # preprocess with flipping to align with ground truth tissue maps
