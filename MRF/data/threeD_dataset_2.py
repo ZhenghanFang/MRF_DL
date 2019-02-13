@@ -27,7 +27,6 @@ class MRFDataset(BaseDataset):
       
     def read_imMRF(self, file):
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        print(n_timepoint)
         return file['imMRF2d'][0:n_timepoint]
       
     def read_Tmap(self, file):
