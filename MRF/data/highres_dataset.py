@@ -29,7 +29,7 @@ class MRFDataset(BaseDataset):
 
     def get_paths(self):
         if self.opt.onMAC:
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20181017/Highres'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20181017/Highres/'
         else:
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/highres/Highres/'
         person_path = ['180923_2', '181007', '181012-1', '181012-2', '181014-1', '181014-2']
