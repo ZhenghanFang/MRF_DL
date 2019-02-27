@@ -56,7 +56,7 @@ class MRFDataset(BaseDataset):
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190219/3DMRF_noSVD_R3_192pnts/'
+            d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         person_path = ['180408','180603','180722','180812_1','180812_2']
         slice_N = [94,94,94,94,94]
