@@ -2958,8 +2958,8 @@ class hoppe_ISMRM2018(nn.Module):
         
         
         model_convpool = [
-            
-            nn.Conv1d(self.input_nc, 30, 15, 5),
+            nn.Conv1d(self.input_nc, 30, 15, 3),
+            #nn.Conv1d(self.input_nc, 30, 15, 5),
             nn.ReLU(True),
             nn.Conv1d(30, 60, 10, 3),
             nn.ReLU(True),
