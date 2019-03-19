@@ -91,9 +91,9 @@ opt = parser.parse_args()
 opt.isTrain = True
 host = subprocess.check_output('hostname').decode('utf-8')[:-1]
 if host == 'stilson' or host == 'andrew' or host == 'wiggin':
-    opt.checkpoints_dir = '/raid/zhenghan/checkpoints'
+    opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 elif host == 'badin' or host == 'bogue' or host == 'burgaw':
-    opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
+    opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 elif host == 'danbury':
     opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 else:
