@@ -94,6 +94,8 @@ if host == 'stilson' or host == 'andrew' or host == 'wiggin':
     opt.checkpoints_dir = '/raid/zhenghan/checkpoints'
 elif host == 'badin' or host == 'bogue' or host == 'burgaw':
     opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
+elif host == 'danbury':
+    opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 else:
     raise ValueError("cannot decide checkpoints_dir, server '%s' not recognized." % host)
 args = vars(opt)
