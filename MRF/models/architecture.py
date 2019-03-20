@@ -2958,8 +2958,7 @@ class hoppe_ISMRM2018(nn.Module):
         
         
         model_convpool = [
-            nn.Conv1d(self.input_nc, 30, 15, 3),
-            #nn.Conv1d(self.input_nc, 30, 15, 5),
+            nn.Conv1d(self.input_nc, 30, 15, 5),
             nn.ReLU(True),
             nn.Conv1d(30, 60, 10, 3),
             nn.ReLU(True),
@@ -2970,6 +2969,19 @@ class hoppe_ISMRM2018(nn.Module):
             nn.Conv1d(150, 300, 3, 1),
             nn.ReLU(True),
             nn.Conv1d(300, 300, 3, 1),
+            nn.ReLU(True),
+            # nn.AvgPool1d(3, 2)
+
+            ]
+        
+        model_convpool = [
+            nn.Conv1d(self.input_nc, 30, 15, 5),
+            nn.ReLU(True),
+            nn.Conv1d(30, 60, 10, 3),
+            nn.ReLU(True),
+            nn.Conv1d(60, 150, 3, 1),
+            nn.ReLU(True),
+            nn.Conv1d(150, 150, 3, 1),
             nn.ReLU(True),
             # nn.AvgPool1d(3, 2)
 
