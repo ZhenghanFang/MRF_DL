@@ -2975,6 +2975,7 @@ class hoppe_ISMRM2018(nn.Module):
             ]
         in_feat = 600
         
+        '''
         model_convpool = [
             nn.Conv1d(self.input_nc, 30, 15, 5),
             nn.ReLU(True),
@@ -2987,8 +2988,9 @@ class hoppe_ISMRM2018(nn.Module):
             # nn.AvgPool1d(3, 2)
 
             ]
-
         in_feat = 1800
+        '''
+        
         model_fc = [
             nn.Linear(in_feat, 1000),
             nn.ReLU(True),
