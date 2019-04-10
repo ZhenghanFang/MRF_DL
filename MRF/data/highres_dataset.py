@@ -60,8 +60,9 @@ class MRFDataset(BaseDataset):
                     })
         
         d_path = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190410/HighresMRF_Phantom/'
-        self.data_paths = [{
+        self.data_paths = []
+        self.data_paths.append({
                 'imMRF': d_path + 'imMRF.mat',
                 'Tmap': d_path + 'patternmatching.mat',
                 'mask': d_path + 'mask.mat'
-                }]
+                })
