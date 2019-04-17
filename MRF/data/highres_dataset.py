@@ -68,7 +68,7 @@ class MRFDataset(BaseDataset):
                 })
         '''
         d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190417/HighresMRF_Peds/190414/'
-        slice_path = ['scan473','scan476','scan478','scan480','scan482']
+        slice_path = ['scan473','scan474','scan476','scan478','scan480','scan482']
         self.data_paths = []
         for j in range(len(slice_path)):
             d_path = d_root + slice_path[j] + '/'
