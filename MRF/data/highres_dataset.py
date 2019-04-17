@@ -75,5 +75,5 @@ class MRFDataset(BaseDataset):
             self.data_paths.append({
                 'imMRF': d_path + 'imMRF_1shot_8beats.mat',
                 'Tmap': d_path + 'patternmatching_1shot_8beats.mat',
-                'mask': d_path + 'patternmatching_1shot_8beats.mat'
+                'mask': d_path + 'mask.mat'
                 })
