@@ -67,6 +67,7 @@ class MRFDataset(BaseDataset):
                 'mask': d_path + 'mask.mat'
                 })
         '''
+        '''
         d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190417/HighresMRF_Peds/190414/'
         slice_path = ['scan473','scan474','scan476','scan478','scan480','scan482']
         self.data_paths = []
@@ -77,3 +78,4 @@ class MRFDataset(BaseDataset):
                 'Tmap': d_path + 'patternmatching_1shot_8beats.mat',
                 'mask': d_path + 'mask.mat'
                 })
+        '''
