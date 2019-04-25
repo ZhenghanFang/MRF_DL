@@ -53,7 +53,8 @@ class MRFDataset(BaseDataset):
 
     def get_paths(self):
         if self.opt.onMAC:
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
+            # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
@@ -61,7 +62,6 @@ class MRFDataset(BaseDataset):
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190403/3DMRF_noSVD_GRAPP2_PF_288pnts/'
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190403/3DMRF_noSVD_GRAPP3_288pnts/'
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set1/'
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         # person_path = ['180408','180603','180722','180812_1','180812_2']
         person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
