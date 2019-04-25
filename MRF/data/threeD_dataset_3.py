@@ -32,18 +32,17 @@ class MRFDataset(BaseDataset):
             self.data.append(self.load_dataset(p))
     
     def read_imMRF(self, file):
-        slice_i = self.slice_i
+        slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        return file['imMRF2d'][0:n_timepoint,sliec_i-1:slice_i+2]
+        return file['imMRF2d'][0:n_timepoint,sliec_i:slice_i+3]
       
     def read_Tmap(self, file):
-        slice_i = self.slice_i
-        return file['t1'][sliec_i-1:slice_i+2], file['t2'][sliec_i-1:slice_i+2]
+        slice_i = self.data_args[self.data_index]['slice_i']
+        return file['t1'][sliec_i:slice_i+3], file['t2'][sliec_i:slice_i+3]
     
     def read_mask(self, file):
-        slice_i = self.slice_i
-        self.slice_i = self.slice_i + 1
-        return file['mask'][sliec_i-1:slice_i+2]
+        slice_i = self.data_args[self.data_index]['slice_i']
+        return file['mask'][ssliec_i:slice_i+3]
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
@@ -63,6 +62,21 @@ class MRFDataset(BaseDataset):
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
         return A_img
+    
+    def __getitem__(self, index):
+        self.data_index = index % len(self.data)
+        data = self.load_dataset(self.data_paths[self.data_index])
+
+        if self.set_type == 'val':
+            sample = {}
+            sample['input_G'], sample['label_G'], sample['mask'] = (
+                data['imMRF'],
+                data['Tmap'],
+                data['mask']
+                )
+            sample = self.np2Tensor(sample)
+        return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data[dataset_i]['dataset_path']}
+
 
     def get_paths(self):
         if self.opt.onMAC:
@@ -88,11 +102,12 @@ class MRFDataset(BaseDataset):
             person = list(range(test_i,test_i+1))
 
         self.data_paths = []
+        self.data_args = []
         for i in range(len(person)):
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
                     'imMRF': d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat',
                     'Tmap':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat',
                     'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
-                    'slice_i':  j
                     })
+                self.data_args.append({'slice_i': j})
