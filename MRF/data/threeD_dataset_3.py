@@ -37,15 +37,17 @@ class MRFDataset(BaseDataset):
     def read_imMRF(self, file):
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        return file['imMRF_all'][0:n_timepoint,slice_i:slice_i+3]
+        return file['imMRF_all'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
       
     def read_Tmap(self, file):
         slice_i = self.data_args[self.data_index]['slice_i']
-        return file['t1big_all'][slice_i:slice_i+3], file['t2big_all'][slice_i:slice_i+3]
+        center_slice = (self.opt.multi_slice_n-1) // 2
+        return file['t1big_all'][slice_i + center_slice], file['t2big_all'][slice_i + center_slice]
     
     def read_mask(self, file):
         slice_i = self.data_args[self.data_index]['slice_i']
-        return file['m0big_all'][slice_i:slice_i+3]
+        center_slice = (self.opt.multi_slice_n-1) // 2
+        return file['m0big_all'][slice_i + center_slice]
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
