@@ -33,7 +33,8 @@ class BaseDataset(data.Dataset):
         self.get_paths()
 
         if self.set_type == 'val':
-            self.load_data(self.data_paths)
+            if self.name != 'threeD_Dataset_3':
+                self.load_data(self.data_paths)
 
         if self.set_type == 'train':
             self.patchSize = opt.patchSize
