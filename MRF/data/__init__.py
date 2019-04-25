@@ -23,6 +23,8 @@ def getDataset(opt):
         from data.simulated_dataset_noise import MRFDataset
     elif opt.dataset == 'threeD_dataset_2':
         from data.threeD_dataset_2 import MRFDataset
+    elif opt.dataset == 'threeD_dataset_3':
+        from data.threeD_dataset_3 import MRFDataset
     else:
         raise ValueError('dataset type %s not recognized' % opt.dataset)
     return MRFDataset
