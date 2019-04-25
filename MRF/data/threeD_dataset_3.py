@@ -20,8 +20,16 @@ import time
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
         self.flipimMRF = False
-        self.initialize_base(opt)
-        self.slice_i = 1
+        self.opt = opt
+        self.set_type = opt.set_type
+        self.device = torch.device('cuda' if self.opt.gpu_ids else 'cpu')
+
+        if opt.isTrain:
+            self.augmentation = opt.augmentation
+        else:
+            self.augmentation = False
+
+        self.get_paths()
 
     def name(self):
         return 'threeD_Dataset_3'
