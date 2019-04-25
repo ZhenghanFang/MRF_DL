@@ -89,5 +89,5 @@ class MRFDataset(BaseDataset):
                     'imMRF': d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat',
                     'Tmap':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat',
                     'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
+                    'slice_i':  j
                     })
-            self.slice_idx[i] = list(range(slice_N[person[i]]))
