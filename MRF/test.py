@@ -60,6 +60,7 @@ parser.add_argument('--magnitude', action='store_true', default=False, help='onl
 parser.add_argument('--gradloss', action='store_true', default=False, help='add gradient loss')
 
 parser.add_argument('--gan', action='store_true', default=False, help='use gan?')
+parser.add_argument('--multi_slice_n', type=int, default=3, help='number of slices as input (for 3D data)')
 
 
 opt = parser.parse_args()
