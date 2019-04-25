@@ -84,8 +84,10 @@ class MRFDataset(BaseDataset):
                 )
             sample = self.np2Tensor(sample)
         return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data[dataset_i]['dataset_path']}
-
-
+    
+    def __len__(self):
+        return len(self.data_paths)
+    
     def get_paths(self):
         if self.opt.onMAC:
             # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
