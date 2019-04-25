@@ -78,7 +78,7 @@ class MRFDataset(BaseDataset):
         for i in range(len(person)):
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
-                    'imMRF': d_root+person_path[person[i]]+'/2d/'+str(j+200)+'.mat',
-                    'Tmap': d_root+person_path[person[i]]+'/2d/'+str(j+200)+'.mat',
-                    'mask': d_root+person_path[person[i]]+'/2d/'+str(j+200)+'.mat'
+                    'imMRF': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat',
+                    'Tmap': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat',
+                    'mask': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat'
                     })
