@@ -24,7 +24,12 @@ class MRFDataset(BaseDataset):
 
     def name(self):
         return 'threeD_Dataset_2'
-      
+    
+    def load_data(self, data_paths):
+        self.data = []
+        for p in data_paths:
+            self.data.append(self.load_dataset(p))
+    
     def read_imMRF(self, file):
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
         return file['imMRF2d'][0:n_timepoint,sliec_i-1:slice_i+2]
