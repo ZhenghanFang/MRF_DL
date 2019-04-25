@@ -72,7 +72,7 @@ class MRFDataset(BaseDataset):
         return A_img
     
     def __getitem__(self, index):
-        self.data_index = index % len(self.data)
+        self.data_index = index % len(self.data_paths)
         data = self.load_dataset(self.data_paths[self.data_index])
 
         if self.set_type == 'val':
