@@ -24,7 +24,7 @@ class MRFDataset(BaseDataset):
         self.slice_i = 1
 
     def name(self):
-        return 'threeD_Dataset_2'
+        return 'threeD_Dataset_3'
     
     def load_data(self, data_paths):
         self.data = []
