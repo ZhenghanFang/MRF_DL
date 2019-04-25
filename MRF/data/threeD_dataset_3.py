@@ -21,6 +21,7 @@ class MRFDataset(BaseDataset):
     def initialize(self, opt):
         self.flipimMRF = False
         self.initialize_base(opt)
+        self.slice_i = 1
 
     def name(self):
         return 'threeD_Dataset_2'
@@ -31,13 +32,17 @@ class MRFDataset(BaseDataset):
             self.data.append(self.load_dataset(p))
     
     def read_imMRF(self, file):
+        slice_i = self.slice_i
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
         return file['imMRF2d'][0:n_timepoint,sliec_i-1:slice_i+2]
       
     def read_Tmap(self, file):
+        slice_i = self.slice_i
         return file['t1'][sliec_i-1:slice_i+2], file['t2'][sliec_i-1:slice_i+2]
     
     def read_mask(self, file):
+        slice_i = self.slice_i
+        self.slice_i = self.slice_i + 1
         return file['mask'][sliec_i-1:slice_i+2]
       
     def preprocess_imMRF(self, imMRF, flip=True):
