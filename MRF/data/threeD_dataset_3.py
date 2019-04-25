@@ -31,6 +31,9 @@ class MRFDataset(BaseDataset):
       
     def read_Tmap(self, file):
         return file['t1'][sliec_i-1:slice_i+2], file['t2'][sliec_i-1:slice_i+2]
+    
+    def read_mask(self, file):
+        return file['mask'][sliec_i-1:slice_i+2]
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
@@ -67,7 +70,7 @@ class MRFDataset(BaseDataset):
         person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
         # slice_N = [94,94,94,94,94]
         # slice_N = [1,1,1,1,1]
-        slice_N = [142,142,142,1,142,142,142]
+        slice_N = [142,142,142,142,142,142,142]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
             person = list(range(0,test_i))+list(range(test_i+1,5))
@@ -78,7 +81,7 @@ class MRFDataset(BaseDataset):
         for i in range(len(person)):
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
-                    'imMRF': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat',
-                    'Tmap': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat',
-                    'mask': d_root+person_path[person[i]]+'/2d/'+str(j+70)+'.mat'
+                    'imMRF': d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat',
+                    'Tmap': '',
+                    'mask': ''
                     })
