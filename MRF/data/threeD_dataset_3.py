@@ -80,7 +80,7 @@ class MRFDataset(BaseDataset):
                 data['mask']
                 )
             sample = self.np2Tensor(sample)
-        return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data[dataset_i]['dataset_path']}
+        return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data_paths[self.data_index]}
     
     def __len__(self):
         return len(self.data_paths)
