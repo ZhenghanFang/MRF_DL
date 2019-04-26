@@ -121,7 +121,7 @@ for i, data in enumerate(dataloader_test):
     message += ' time: %.5fs' % (end-start)
     util.print_log(message, opt.file_name)
     visual_result = model.get_current_visuals()
-    sio.savemat(os.path.join(opt.results_dir, 'latest_' + str(i+1) + '.mat'),{'visual_result':visual_result})
+    sio.savemat(os.path.join(opt.results_dir, 'latest_' + str(i+143) + '.mat'),{'visual_result':visual_result})
 
 print('Test done')
 
