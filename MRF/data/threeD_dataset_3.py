@@ -117,4 +117,4 @@ class MRFDataset(BaseDataset):
                     'Tmap':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat',
                     'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
                     })
-                self.data_args.append({'slice_i': j})
+                self.data_args.append({'slice_i': j+142})
