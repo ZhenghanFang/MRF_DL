@@ -102,7 +102,6 @@ class MRFDataset(BaseDataset):
         # slice_N = [94,94,94,94,94]
         # slice_N = [1,1,1,1,1]
         slice_N = [144,176,160,176,176,160,160]
-        slice_N = slice_N - (self.opt.multi_slice_n-1)
         slice_N[:]=[x - (self.opt.multi_slice_n-1) for x in slice_N]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
