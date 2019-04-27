@@ -90,7 +90,7 @@ parser.add_argument('--multi_slice_n', type=int, default=3, help='number of slic
 opt = parser.parse_args()
 opt.isTrain = True
 host = subprocess.check_output('hostname').decode('utf-8')[:-1]
-if host == 'stilson' or host == 'andrew' or host == 'wiggin':
+if host == 'stilson' or host == 'andrew' or host == 'wiggin' or host == 'enfield' or host == 'erwin' or host == 'eureka':
     opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 elif host == 'badin' or host == 'bogue' or host == 'burgaw':
     opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
