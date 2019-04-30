@@ -79,3 +79,13 @@ class MRFDataset(BaseDataset):
                 'mask': d_path + 'mask.mat'
                 })
         '''
+        d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190417/HighresMRF_Peds/190428_MAP2/'
+        slice_path = ['309','311','313','315','317','319','321','323','325','327']
+        self.data_paths = []
+        for j in range(len(slice_path)):
+            d_path = d_root + slice_path[j] + '/'
+            self.data_paths.append({
+                'imMRF': d_path + 'imMRF_1shot_8beats.mat',
+                'Tmap': d_path + 'patternmatching_1shot_4beats.mat',
+                'mask': d_path + 'mask.mat'
+                })
