@@ -101,7 +101,7 @@ opt.set_type = 'val'
 dataset = MRFDataset()
 dataset.initialize(opt)
 dataloader_test = torch.utils.data.DataLoader(dataset,
-    batch_size=1, shuffle=False, num_workers=1)
+    batch_size=1, shuffle=False, num_workers=0)
 dataloader_test.dataset.patchSize = 0
 print("dataset [%s] was created" % (dataset.name()))
 
