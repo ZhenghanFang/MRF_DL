@@ -82,7 +82,7 @@ with open(opt.file_name, 'wt') as log_file:
         log_file.write('%s: %s\n' % (str(k), str(v)))
     log_file.write('-------------- End ----------------\n')
 
-if onMAC:
+if opt.onMAC:
     opt.gpu_ids=[]
 else:
     gpu_id = util.get_vacant_gpu()
