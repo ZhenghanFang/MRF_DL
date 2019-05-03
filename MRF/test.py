@@ -83,9 +83,12 @@ with open(opt.file_name, 'wt') as log_file:
         log_file.write('%s: %s\n' % (str(k), str(v)))
     log_file.write('-------------- End ----------------\n')
 
-
-
-opt.gpu_ids=[]
+if onMAC:
+    opt.gpu_ids=[]
+else:
+    gpu_id = util.get_vacant_gpu()
+    torch.cuda.set_device(gpu_id)
+    opt.gpu_ids=[gpu_id]
 
 Model = getModel(opt)
 model = Model()
