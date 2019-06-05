@@ -70,7 +70,7 @@ class MRFDataset(BaseDataset):
         slice_N = [142,142,142,142,142,142,142]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
-            person = list(range(0,test_i))+list(range(test_i+1,7))
+            person = list(range(0,test_i))+list(range(test_i+1,6))
         else:
             person = list(range(test_i,test_i+1))
 
