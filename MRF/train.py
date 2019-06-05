@@ -90,11 +90,11 @@ parser.add_argument('--multi_slice_n', type=int, default=3, help='number of slic
 opt = parser.parse_args()
 opt.isTrain = True
 host = subprocess.check_output('hostname').decode('utf-8')[:-1]
-if host == 'stilson' or host == 'andrew' or host == 'wiggin' or host == 'enfield' or host == 'erwin' or host == 'eureka':
+if host == 'stilson' or host == 'andrew' or host == 'wiggin':
     opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
 elif host == 'badin' or host == 'bogue' or host == 'burgaw':
     opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
-elif host in ['danbury', 'denton', 'elkin', 'elkpark', 'dublin', 'dobson']:
+elif host in ['danbury', 'denton', 'elkin', 'elkpark', 'dublin', 'dobson', 'eureka', 'erwin', 'enfield', 'elmcity']:
     opt.checkpoints_dir = '/data/zhenghan/checkpoints'
 else:
     raise ValueError("cannot decide checkpoints_dir, server '%s' not recognized." % host)
