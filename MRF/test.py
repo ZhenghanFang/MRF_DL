@@ -85,8 +85,8 @@ with open(opt.file_name, 'wt') as log_file:
 if opt.onMAC:
     opt.gpu_ids=[]
 else:
-    #gpu_id = util.get_vacant_gpu()
-    gpu_id = 0
+    gpu_id = util.get_vacant_gpu()
+    # gpu_id = 0
     torch.cuda.set_device(gpu_id)
     opt.gpu_ids=[gpu_id]
 
