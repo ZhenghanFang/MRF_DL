@@ -190,7 +190,7 @@ for epoch in range(opt.epoch_count, opt.niter + opt.niter_decay + 1):
 
     if opt.dataset == 'single_dataset':
         dataset_train.get_patch_pos(opt)
-    elif opt.dataset == 'highres_dataset' or opt.dataset == 'simulated_dataset' or opt.dataset == 'dict_dataset' or opt.dataset == 'single_dataset_2' or opt.dataset == 'T1hT2_dataset' or opt.dataset == 'simulated_dataset_noise' or opt.dataset == 'threeD_dataset_2':
+    elif opt.dataset == 'highres_dataset' or opt.dataset == 'simulated_dataset' or opt.dataset == 'dict_dataset' or opt.dataset == 'single_dataset_2' or opt.dataset == 'T1hT2_dataset' or opt.dataset == 'simulated_dataset_noise' or opt.dataset == 'threeD_dataset_2' or opt.dataset == 'threeD_dataset_3':
         dataset_train.switch_data()
     else:
         dataset_train.load_data()
