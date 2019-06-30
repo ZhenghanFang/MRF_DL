@@ -109,9 +109,15 @@ class MRFDataset(BaseDataset):
         slice_N = [x - (self.opt.multi_slice_n-1) for x in slice_N_total]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
-            person = list(range(0,test_i))+list(range(test_i+1,len(slice_N)))
+            if test_i == -1:
+                person = list(range(0,len(slice_N)))
+            else:
+                person = list(range(0,test_i))+list(range(test_i+1,len(slice_N)))
         else:
-            person = list(range(test_i,test_i+1))
+            if test_i == -1:
+                person = []
+            else:
+                person = list(range(test_i,test_i+1))
 
         self.data_paths = []
         self.data_args = []
