@@ -70,7 +70,7 @@ class MRFDataset(BaseDataset):
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
         return A_img
-    
+    '''
     def __getitem__(self, index):
         self.data_index = index % len(self.data_paths)
         data = self.load_dataset(self.data_paths[self.data_index])
@@ -84,7 +84,7 @@ class MRFDataset(BaseDataset):
                 )
             sample = self.np2Tensor(sample)
         return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data_paths[self.data_index]['imMRF']}
-    
+    '''
     def __len__(self):
         return len(self.data_paths)
     
