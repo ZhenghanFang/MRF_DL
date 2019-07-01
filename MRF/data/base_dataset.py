@@ -122,7 +122,8 @@ class BaseDataset(data.Dataset):
 
     def load_data(self, data_paths):
         self.data = []
-        for p in data_paths:
+        for i, p in enumerate(data_paths):
+            self.data_index = i
             self.data.append(self.load_dataset(p))
 
     def load_dataset(self, data_path):
