@@ -103,8 +103,8 @@ class MRFDataset(BaseDataset):
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         # person_path = ['180408','180603','180722','180812_1','180812_2']
-        # person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
-        person_path = ['190330_DLMRF3D_vol4', '190407_DLMRF3D_vol6']
+        person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
+        # person_path = ['190330_DLMRF3D_vol4', '190407_DLMRF3D_vol6']
         # slice_N = [94,94,94,94,94]
         # slice_N = [1,1,1,1,1]
         slice_N_total = [144,176,160,176,176,160,160]
