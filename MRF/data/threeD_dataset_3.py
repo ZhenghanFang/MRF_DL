@@ -127,8 +127,11 @@ class MRFDataset(BaseDataset):
         for i in range(len(person)):
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
-                    'imMRF': d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat',
-                    'Tmap':  d_root+person_path[person[i]]+'/patternmatching_noSVD.mat',
-                    'mask':  d_root+person_path[person[i]]+'/mask.mat'
+                    # 'imMRF': d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat',
+                    # 'Tmap':  d_root+person_path[person[i]]+'/patternmatching_noSVD.mat',
+                    # 'mask':  d_root+person_path[person[i]]+'/mask.mat'
+                    'imMRF': d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat',
+                    'Tmap':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat',
+                    'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
                     })
                 self.data_args.append({'slice_i': j})
