@@ -91,8 +91,8 @@ class MRFDataset(BaseDataset):
     def get_paths(self):
         if self.opt.onMAC:
             # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
-            # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
+            # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
@@ -107,8 +107,8 @@ class MRFDataset(BaseDataset):
         person_path = ['190330_DLMRF3D_vol4', '190407_DLMRF3D_vol6']
         # slice_N = [94,94,94,94,94]
         # slice_N = [1,1,1,1,1]
-        # slice_N = [144,176,160,176,176,160,160]
-        slice_N_total = [40,40]
+        slice_N_total = [144,176,160,176,176,160,160]
+        # slice_N_total = [40,40]
         slice_N = [x - (self.opt.multi_slice_n-1) for x in slice_N_total]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
