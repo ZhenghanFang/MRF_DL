@@ -40,10 +40,9 @@ class MRFDataset(BaseDataset):
     def load_dataset(self, data_path):
         print('load dataset: ', data_path)
         data = {}
-        data_path_imMRF = data_path['imMRF']
-        data['imMRF'] = self.preprocess_imMRF(self.read_imMRF(data_path_imMRF), flip=self.flipimMRF)
-        data['Tmap'] = self.preprocess_Tmap(*self.read_Tmap(data_path_imMRF))
-        data['mask'] = self.preprocess_mask(self.read_mask(data_path_imMRF))
+        data['imMRF'] = self.preprocess_imMRF(self.read_imMRF(), flip=self.flipimMRF)
+        data['Tmap'] = self.preprocess_Tmap(*self.read_Tmap())
+        data['mask'] = self.preprocess_mask(self.read_mask())
         if self.opt.half:
             for k in data:
                 data[k] = data[k].astype('float16')
@@ -54,18 +53,21 @@ class MRFDataset(BaseDataset):
         data['dataset_path'] = self.get_dataset_path(data_path)
         return data
     
-    def read_imMRF(self, path):
+    def read_imMRF(self):
+        path = self.data_paths[self.data_index]['imMRF']
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
         print(type(self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]))
         return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n].copy()
     
-    def read_Tmap(self, path):
+    def read_Tmap(self):
+        path = self.data_paths[self.data_index]['imMRF']
         slice_i = self.data_args[self.data_index]['slice_i']
         center_slice = (self.opt.multi_slice_n-1) // 2
         return self.data3D[path]['t1'][slice_i + center_slice].copy(), self.data3D[path]['t2'][slice_i + center_slice].copy()
     
-    def read_mask(self, path):
+    def read_mask(self):
+        path = self.data_paths[self.data_index]['imMRF']
         slice_i = self.data_args[self.data_index]['slice_i']
         center_slice = (self.opt.multi_slice_n-1) // 2
         return self.data3D[path]['mask'][slice_i + center_slice].copy()
