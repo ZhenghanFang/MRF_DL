@@ -39,7 +39,8 @@ class SimpleModel(BaseModel):
                        self.netG_A.model_T1[0][0].weight[:,2304:2304+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,2304+768:2304+768+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,2304+768*2:2304+768*2+576,:,:]), 1))
-        print(self.netG_A.model_T1[0][0].weight.shape)
+        print(self.netG_A.model_T1[0][0].weight)
+        print(self.netG_A.model_T1[0][0])
 
         self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
             opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
