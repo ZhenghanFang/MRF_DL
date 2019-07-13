@@ -137,6 +137,8 @@ class MRFDataset(BaseDataset):
                 person = []
             else:
                 person = list(range(test_i,test_i+1))
+                
+        person = person[0:1]
 
         self.data_paths = []
         self.data_args = []
