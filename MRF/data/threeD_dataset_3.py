@@ -140,7 +140,7 @@ class MRFDataset(BaseDataset):
             else:
                 person = list(range(test_i,test_i+1))
         
-        # For fast code testing:
+        # For fast debugging:
         # person = person[0:1]
 
         self.data_paths = []
