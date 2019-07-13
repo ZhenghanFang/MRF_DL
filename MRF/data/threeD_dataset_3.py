@@ -57,17 +57,18 @@ class MRFDataset(BaseDataset):
     def read_imMRF(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
+        print(class(self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]))
+        return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n].copy()
     
     def read_Tmap(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         center_slice = (self.opt.multi_slice_n-1) // 2
-        return self.data3D[path]['t1'][slice_i + center_slice], self.data3D[path]['t2'][slice_i + center_slice]
+        return self.data3D[path]['t1'][slice_i + center_slice].copy(), self.data3D[path]['t2'][slice_i + center_slice].copy()
     
     def read_mask(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         center_slice = (self.opt.multi_slice_n-1) // 2
-        return self.data3D[path]['mask'][slice_i + center_slice]
+        return self.data3D[path]['mask'][slice_i + center_slice].copy()
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
