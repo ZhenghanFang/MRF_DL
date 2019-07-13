@@ -41,7 +41,6 @@ class SimpleModel(BaseModel):
             self.load_network(self.netG_A, opt.saved_model_path)
             if self.opt.progressive_train:
                 def init_1st_layer(model):
-                    
                     W = torch.cat((model[0][0].weight[:,0:576,:,:],
                                model[0][0].weight[:,768:768+576,:,:],
                                model[0][0].weight[:,768*2:768*2+576,:,:],
@@ -51,9 +50,9 @@ class SimpleModel(BaseModel):
                     model[0][0] = networks.define_G(opt, 3456, opt.output_nc,
                         opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids).model_T1[0][0]
                     model[0][0].weight = torch.nn.Parameter(W)
-                    print(model[0][0].weight)
-                    print(model[0][0].weight.shape)
-                    print(model[0][0])
+                    # print(model[0][0].weight)
+                    # print(model[0][0].weight.shape)
+                    # print(model[0][0])
                 init_1st_layer(self.netG_A.model_T1)
                 init_1st_layer(self.netG_A.model_T2)
 
