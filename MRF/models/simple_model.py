@@ -32,14 +32,15 @@ class SimpleModel(BaseModel):
         self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
             opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
         self.load_network(self.netG_A, opt.saved_model_path)
-        self.netG_A.model_T1[0][0].weight = torch.nn.Parameter(
-            torch.cat((self.netG_A.model_T1[0][0].weight[:,0:576,:,:],
+        W = torch.cat((self.netG_A.model_T1[0][0].weight[:,0:576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,768:768+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,768*2:768*2+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,2304:2304+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,2304+768:2304+768+576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,2304+768*2:2304+768*2+576,:,:]), 1))
-        
+        self.netG_A.model_T1[0][0] = networks.define_G(opt, 3456, opt.output_nc,
+            opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids).model_T1[0][0]
+        self.netG_A.model_T1[0][0].weight = torch.nn.Parameter(W)
         print(self.netG_A.model_T1[0][0].weight)
         print(self.netG_A.model_T1[0][0].weight.shape)
         print(self.netG_A.model_T1[0][0])
