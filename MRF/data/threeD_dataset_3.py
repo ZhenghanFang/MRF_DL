@@ -38,7 +38,7 @@ class MRFDataset(BaseDataset):
         return 'threeD_Dataset_3'
     
     def load_dataset(self, data_path):
-        print('load dataset: ', data_path)
+        print('load dataset: ', data_path, 'slice:', self.data_args[self.data_index]['slice_i'])
         data = {}
         data['imMRF'] = self.preprocess_imMRF(self.read_imMRF(), flip=self.flipimMRF)
         data['Tmap'] = self.preprocess_Tmap(*self.read_Tmap())
@@ -159,7 +159,7 @@ class MRFDataset(BaseDataset):
                     # 'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
                     })
                 self.data_args.append({'slice_i': j})
-            print('loading data', imMRF_path)
+            print('loading data:', imMRF_path)
             self.data3D[imMRF_path] = {}
             self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][:]
             self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all'][:]
