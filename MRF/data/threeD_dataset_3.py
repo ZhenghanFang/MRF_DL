@@ -57,7 +57,7 @@ class MRFDataset(BaseDataset):
         path = self.data_paths[self.data_index]['imMRF']
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        print(type(self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]))
+        # print(type(self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]))
         return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n].copy()
     
     def read_Tmap(self):
@@ -139,8 +139,9 @@ class MRFDataset(BaseDataset):
                 person = []
             else:
                 person = list(range(test_i,test_i+1))
-                
-        person = person[0:1]
+        
+        # For fast code testing:
+        # person = person[0:1]
 
         self.data_paths = []
         self.data_args = []
