@@ -45,6 +45,7 @@ parser.add_argument('--output_nc', type=int, default=1, help='# of output image 
 parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in first conv layer')
 #    parser.add_argument('--ndf', type=int, default=64, help='# of discrim filters in first conv layer')
 #    parser.add_argument('--which_model_netD', type=str, default='basic', help='selects model to use for netD')
+parser.add_argument('--saved_model_path', type=str, default='', help='path of saved model')
 parser.add_argument('--PreNetwork_path', type=str, default='/shenlab/lab_stor/zhenghan/checkpoints/FC_46_2/final_net_G_A.pth', help='pretrained network\'s path')
 #    parser.add_argument('--n_layers_D', type=int, default=3, help='only used if which_model_netD==n_layers')
 #    parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
