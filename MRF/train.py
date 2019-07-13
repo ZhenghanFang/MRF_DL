@@ -122,7 +122,6 @@ opt.gpu_ids=[gpu_id]
 
 Model = getModel(opt)
 model = Model()
-model.initialize(opt)
 '''
 model.initialize(opt)
 print("model [%s] was created" % (model.name()))
