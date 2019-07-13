@@ -57,7 +57,7 @@ class MRFDataset(BaseDataset):
     def read_imMRF(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        return data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
+        return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
     
     def read_Tmap(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
@@ -156,7 +156,7 @@ class MRFDataset(BaseDataset):
                 self.data_args.append({'slice_i': j})
             print('loading data', imMRF_path)
             self.data3D[imMRF_path] = {}
-            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all']
-            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all']
-            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all']
-            self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['mask']
+            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][:]
+            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all'][:]
+            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all'][:]
+            self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['mask'][:]
