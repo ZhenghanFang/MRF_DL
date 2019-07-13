@@ -139,6 +139,7 @@ class MRFDataset(BaseDataset):
 
         self.data_paths = []
         self.data_args = []
+        self.data3D = {}
         for i in range(len(person)):
             imMRF_path = d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat'
             Tmap_path = d_root+person_path[person[i]]+'/patternmatching_noSVD.mat'
@@ -154,6 +155,7 @@ class MRFDataset(BaseDataset):
                     })
                 self.data_args.append({'slice_i': j})
             print('loading data', imMRF_path)
+            self.data3D[imMRF_path] = {}
             self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all']
             self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all']
             self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all']
