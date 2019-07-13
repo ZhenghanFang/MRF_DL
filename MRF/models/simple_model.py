@@ -35,7 +35,10 @@ class SimpleModel(BaseModel):
         self.netG_A.model_T1[0][0].weight = torch.nn.Parameter(
             torch.cat((self.netG_A.model_T1[0][0].weight[:,0:576,:,:],
                        self.netG_A.model_T1[0][0].weight[:,768:768+576,:,:],
-                       self.netG_A.model_T1[0][0].weight[:,768*2:768*2+576,:,:]), 1))
+                       self.netG_A.model_T1[0][0].weight[:,768*2:768*2+576,:,:],
+                       self.netG_A.model_T1[0][0].weight[:,2304:2304+576,:,:],
+                       self.netG_A.model_T1[0][0].weight[:,2304+768:2304+768+576,:,:],
+                       self.netG_A.model_T1[0][0].weight[:,2304+768*2:2304+768*2+576,:,:]), 1))
         print(self.netG_A.model_T1[0][0].weight.shape)
 
         self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
