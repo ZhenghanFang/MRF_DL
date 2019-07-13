@@ -28,6 +28,11 @@ class SimpleModel(BaseModel):
         # load/define networks
         # The naming conversion is different from those used in the paper
         # Code (paper): G_A (G), G_B (F), D_A (D_Y), D_B (D_X)
+        
+        self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
+            opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
+        self.load_network(self.netG_A, opt.saved_model_path)
+        print(self.netG_A.model_T1)
 
         self.netG_A = networks.define_G(opt, opt.input_nc, opt.output_nc,
             opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
