@@ -37,20 +37,37 @@ class MRFDataset(BaseDataset):
     def name(self):
         return 'threeD_Dataset_3'
     
-    def read_imMRF(self, file):
+    def load_dataset(self, data_path):
+        print('load dataset: ', data_path)
+        data = {}
+        data_path_imMRF = data_path['imMRF']
+        data['imMRF'] = self.preprocess_imMRF(self.read_imMRF(data_path_imMRF), flip=self.flipimMRF)
+        data['Tmap'] = self.preprocess_Tmap(*self.read_Tmap(data_path_imMRF))
+        data['mask'] = self.preprocess_mask(self.read_mask(data_path_imMRF))
+        if self.opt.half:
+            for k in data:
+                data[k] = data[k].astype('float16')
+        if self.opt.zerobg:
+            data['imMRF'] = data['imMRF'] * data['mask']
+
+        # dataset_path = os.path.splitext(os.path.split(imMRF_path)[-1])[0]
+        data['dataset_path'] = self.get_dataset_path(data_path)
+        return data
+    
+    def read_imMRF(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
-        return file['imMRF_all'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
-      
-    def read_Tmap(self, file):
-        slice_i = self.data_args[self.data_index]['slice_i']
-        center_slice = (self.opt.multi_slice_n-1) // 2
-        return file['t1big_all'][slice_i + center_slice], file['t2big_all'][slice_i + center_slice]
+        return data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]
     
-    def read_mask(self, file):
+    def read_Tmap(self, path):
         slice_i = self.data_args[self.data_index]['slice_i']
         center_slice = (self.opt.multi_slice_n-1) // 2
-        return file['mask'][slice_i + center_slice]
+        return self.data3D[path]['t1'][slice_i + center_slice], self.data3D[path]['t2'][slice_i + center_slice]
+    
+    def read_mask(self, path):
+        slice_i = self.data_args[self.data_index]['slice_i']
+        center_slice = (self.opt.multi_slice_n-1) // 2
+        return self.data3D[path]['mask'][slice_i + center_slice]
       
     def preprocess_imMRF(self, imMRF, flip=True):
         # combine slice dimension and time dimension
@@ -123,13 +140,21 @@ class MRFDataset(BaseDataset):
         self.data_paths = []
         self.data_args = []
         for i in range(len(person)):
+            imMRF_path = d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat'
+            Tmap_path = d_root+person_path[person[i]]+'/patternmatching_noSVD.mat'
+            mask_path = d_root+person_path[person[i]]+'/mask.mat'
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
-                    'imMRF': d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat',
-                    'Tmap':  d_root+person_path[person[i]]+'/patternmatching_noSVD.mat',
-                    'mask':  d_root+person_path[person[i]]+'/mask.mat'
+                    'imMRF': imMRF_path,
+                    'Tmap':  Tmap_path,
+                    'mask':  mask_path
                     # 'imMRF': d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat',
                     # 'Tmap':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat',
                     # 'mask':  d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
                     })
                 self.data_args.append({'slice_i': j})
+            print('loading data'+imMRF_path)
+            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all']
+            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all']
+            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all']
+            self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['mask']
