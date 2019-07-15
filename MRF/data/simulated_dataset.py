@@ -35,13 +35,13 @@ class MRFDataset(BaseDataset):
             imMRF = imMRF[:, ::-1, ::-1]
         # imMRF = numpy.flip(numpy.flip(imMRF,1),2)
         A_img = imMRF
-        A_img = numpy.concatenate((A_img['real'], A_img['imag']), axis=0).astype('float32')
-        
+        print(A_img['real'][0,0,0])
+        print(A_img['imag'][0,0,0])
         # flip the real part for half of slices
-        print(A_img)
-        if random.random() > 0.5:
-            A_img[0] = - A_img[0]
-        print(A_img)
+        flip = -1.0 if random.random() > 0.5 else 1.0
+        A_img = numpy.concatenate((A_img['real'] * flip, A_img['imag']), axis=0).astype('float32')
+        print(A_img[0,0,0])
+        print(A_img[576,0,0])
         
         # normalization
         if self.opt.data_norm == 'non':
