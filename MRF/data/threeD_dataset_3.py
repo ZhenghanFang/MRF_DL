@@ -161,8 +161,9 @@ class MRFDataset(BaseDataset):
                     })
                 self.data_args.append({'slice_i': j})
             print('loading data:', imMRF_path)
+            n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
             self.data3D[imMRF_path] = {}
-            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][:]
+            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][0:n_timepoint]
             self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all'][:]
             self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all'][:]
             if not mask_path:
