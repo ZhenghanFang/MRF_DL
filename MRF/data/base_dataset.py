@@ -189,7 +189,6 @@ class BaseDataset(data.Dataset):
                 data = self.load_dataset(self.data_paths[self.data_index])
             else:
                 data = self.data[self.data_index]
-            print(data)
             sample = {}
             sample['input_G'], sample['label_G'], sample['mask'] = (
                 data['imMRF'],
