@@ -154,10 +154,15 @@ dataloader_val = torch.utils.data.DataLoader(dataset_test,
 dataloader_val.dataset.patchSize = 0
 print("dataset_test [%s] was created" % (dataset_test.name()))
 
-gpu_id = util.get_vacant_gpu()
-torch.cuda.set_device(gpu_id)
-opt.gpu_ids=[gpu_id]
-print('select gpu # %d' % gpu_id)
+if opt.gpu_ids == '-1':
+    opt.gpu_ids = []
+elif opt.gpu_ids == '-2':
+    gpu_id = util.get_vacant_gpu()
+    torch.cuda.set_device(gpu_id)
+    opt.gpu_ids=[gpu_id]
+else:
+    opt.gpu_ids=list(opt.gpu_ids)
+print('select gpu # %d' % opt.gpu_ids)
 
 model.initialize(opt)
 print("model [%s] was created" % (model.name()))
