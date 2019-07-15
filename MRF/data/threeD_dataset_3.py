@@ -20,19 +20,9 @@ import time
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
         self.flipimMRF = False
+        self.n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
         self.initialize_base(opt)
-        '''
-        self.opt = opt
-        self.set_type = opt.set_type
-        self.device = torch.device('cuda' if self.opt.gpu_ids else 'cpu')
-
-        if opt.isTrain:
-            self.augmentation = opt.augmentation
-        else:
-            self.augmentation = False
-
-        self.get_paths()
-        '''
+        
 
     def name(self):
         return 'threeD_Dataset_3'
@@ -56,9 +46,9 @@ class MRFDataset(BaseDataset):
     def read_imMRF(self):
         path = self.data_paths[self.data_index]['imMRF']
         slice_i = self.data_args[self.data_index]['slice_i']
-        n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
+        
         # print(type(self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n]))
-        return self.data3D[path]['imMRF'][0:n_timepoint,slice_i:slice_i+self.opt.multi_slice_n].copy()
+        return self.data3D[path]['imMRF'][0:self.n_timepoint,slice_i:slice_i+self.opt.multi_slice_n].copy()
     
     def read_Tmap(self):
         path = self.data_paths[self.data_index]['imMRF']
@@ -161,9 +151,8 @@ class MRFDataset(BaseDataset):
                     })
                 self.data_args.append({'slice_i': j})
             print('loading data:', imMRF_path)
-            n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
             self.data3D[imMRF_path] = {}
-            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][0:n_timepoint]
+            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][0:self.n_timepoint]
             self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all'][:]
             self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all'][:]
             if not mask_path:
