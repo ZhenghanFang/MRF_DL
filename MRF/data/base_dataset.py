@@ -234,7 +234,7 @@ class BaseDataset(data.Dataset):
             imgSize = self.data[0]['mask'].shape[1]
             return len(self.data) * int((imgSize**2)/(self.opt.patchStride**2)) * 1
         elif self.set_type == 'val':
-            return len(self.data)
+            return len(self.data_paths)
 
     def get_dataset_path(self, data_path):
         return data_path['imMRF']
