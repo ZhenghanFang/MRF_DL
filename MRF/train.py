@@ -49,7 +49,7 @@ parser.add_argument('--ngf', type=int, default=64, help='# of gen filters in fir
 parser.add_argument('--saved_model_path', type=str, default='', help='path of saved model')
 parser.add_argument('--PreNetwork_path', type=str, default='/shenlab/lab_stor/zhenghan/checkpoints/FC_46_2/final_net_G_A.pth', help='pretrained network\'s path')
 #    parser.add_argument('--n_layers_D', type=int, default=3, help='only used if which_model_netD==n_layers')
-#    parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
+parser.add_argument('--gpu_ids', type=str, default='-2', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU. use -2 for automatically selecting the most vacant one on server.')
 #    parser.add_argument('--model', type=str, default='cycle_gan', help='chooses which model to use. cycle_gan, pix2pix, test')
 parser.add_argument('--nThreads', default=0, type=int, help='# threads for loading data')
 parser.add_argument('--norm', type=str, default='batch', help='instance normalization or batch normalization')
@@ -117,10 +117,15 @@ with open(opt.file_name, 'wt') as log_file:
         log_file.write('%s: %s\n' % (str(k), str(v)))
     log_file.write('-------------- End ----------------\n')
 
-
-gpu_id = util.get_vacant_gpu()
-torch.cuda.set_device(gpu_id)
-opt.gpu_ids=[gpu_id]
+if opt.gpu_ids == '-1':
+    opt.gpu_ids = []
+elif opt.gpu_ids == '-2':
+    gpu_id = util.get_vacant_gpu()
+    torch.cuda.set_device(gpu_id)
+    opt.gpu_ids=[gpu_id]
+else:
+    opt.gpu_ids=list(opt.gpu_ids)
+print(opt.gpu_ids)
 
 Model = getModel(opt)
 model = Model()
