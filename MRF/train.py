@@ -153,7 +153,7 @@ elif opt.gpu_ids == '-2':
     opt.gpu_ids=[gpu_id]
 else:
     opt.gpu_ids=list(opt.gpu_ids)
-print('select gpu # %d' % opt.gpu_ids)
+print('select gpu # ', opt.gpu_ids)
 
 model.initialize(opt)
 print("model [%s] was created" % (model.name()))
