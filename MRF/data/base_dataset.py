@@ -31,8 +31,10 @@ class BaseDataset(data.Dataset):
             self.augmentation = False
 
         self.get_paths()
-
-        if self.set_type == 'val':
+        
+        self.data = []
+        
+        if self.set_type == 'val' and self.opt.preload_val_data:
             self.load_data(self.data_paths)
 
         if self.set_type == 'train':
@@ -121,7 +123,6 @@ class BaseDataset(data.Dataset):
         return mask[numpy.newaxis,:,:]
 
     def load_data(self, data_paths):
-        self.data = []
         for i, p in enumerate(data_paths):
             self.data_index = i
             self.data.append(self.load_dataset(p))
@@ -181,14 +182,19 @@ class BaseDataset(data.Dataset):
         self.load_data(data_paths)
 
     def __getitem__(self, index):
-        dataset_i = index % len(self.data)
+        dataset_i = index % len(self.data_paths)
+        self.data_index = dataset_i
 
         if self.set_type == 'val':
+            if not self.data:
+                data = self.load_dataset(self.data_paths[self.data_index])
+            else:
+                data = self.data[dataset_i]
             sample = {}
             sample['input_G'], sample['label_G'], sample['mask'] = (
-                self.data[dataset_i]['imMRF'],
-                self.data[dataset_i]['Tmap'],
-                self.data[dataset_i]['mask']
+                data['imMRF'],
+                data['Tmap'],
+                data['mask']
                 )
             sample = self.np2Tensor(sample)
         elif self.set_type == 'train':
