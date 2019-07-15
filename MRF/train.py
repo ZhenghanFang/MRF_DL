@@ -117,15 +117,6 @@ with open(opt.file_name, 'wt') as log_file:
         log_file.write('%s: %s\n' % (str(k), str(v)))
     log_file.write('-------------- End ----------------\n')
 
-if opt.gpu_ids == '-1':
-    opt.gpu_ids = []
-elif opt.gpu_ids == '-2':
-    gpu_id = util.get_vacant_gpu()
-    torch.cuda.set_device(gpu_id)
-    opt.gpu_ids=[gpu_id]
-else:
-    opt.gpu_ids=list(opt.gpu_ids)
-print(opt.gpu_ids)
 
 Model = getModel(opt)
 model = Model()
