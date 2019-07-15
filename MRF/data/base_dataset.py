@@ -34,7 +34,7 @@ class BaseDataset(data.Dataset):
         
         self.data = []
         
-        if self.set_type == 'val' and self.opt.preload_val_data:
+        if self.set_type == 'val' and self.opt.isTrain:
             self.load_data(self.data_paths)
 
         if self.set_type == 'train':
