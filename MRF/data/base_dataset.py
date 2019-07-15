@@ -197,10 +197,12 @@ class BaseDataset(data.Dataset):
                 data['mask']
                 )
             sample = self.np2Tensor(sample)
+            
         elif self.set_type == 'train':
             dataset_i = index % len(self.data)
             start = time.time()
-            sample = self.get_patch(dataset_i)
+            data = self.data[dataset_i]
+            sample = self.get_patch(data)
             sample = self.transform_train(sample)
             # print('before aug', time.time()-start)
             sample = self.np2Tensor(sample)
@@ -213,20 +215,20 @@ class BaseDataset(data.Dataset):
         # sample = self.np2Tensor(sample)
         # print('after toTensor', time.time()-start)
 
-        return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': self.data[dataset_i]['dataset_path']}
+        return {'A': sample['input_G'], 'B': sample['label_G'], 'mask': sample['mask'], 'A_paths': data['dataset_path']}
 
     def transform_train(self, sample):
         return sample
 
-    def get_patch(self, dataset_i):
+    def get_patch(self, data):
         patchSize = self.patchSize
         time_start = time.time()
-        patch_i_1, patch_i_2 = self.filter_patch_pos(self.data[dataset_i]['mask'], patchSize)
+        patch_i_1, patch_i_2 = self.filter_patch_pos(data['mask'], patchSize)
         sample = {}
         sample['mask'], sample['input_G'], sample['label_G'] = (
-            self.data[dataset_i]['mask'],
-            self.data[dataset_i]['imMRF'],
-            self.data[dataset_i]['Tmap'])
+            data['mask'],
+            data['imMRF'],
+            data['Tmap'])
         sample = self.extractPatch(patch_i_1, patch_i_2, patchSize, sample)
         return sample
 
