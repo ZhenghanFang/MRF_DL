@@ -88,7 +88,7 @@ parser.add_argument('--gan_lamda_G', action='store_true', default=0.0, help='wei
 parser.add_argument('--multi_slice_n', type=int, default=3, help='number of slices as input (for 3D data)')
 parser.add_argument('--progressive_train', action='store_true', help='Progressively train the model using decreasing number of time points')
 parser.add_argument('--input_nc_prev', type=int, default=0, help='# of input image channels of the previous model (valid when progressive_train is True)')
-
+parser.add_argument('--preload_val_data', default=True, help='load all validation data before training/testing?')
 
 opt = parser.parse_args()
 opt.isTrain = True
