@@ -182,14 +182,13 @@ class BaseDataset(data.Dataset):
         self.load_data(data_paths)
 
     def __getitem__(self, index):
-        dataset_i = index % len(self.data_paths)
-        self.data_index = dataset_i
-
         if self.set_type == 'val':
+            self.data_index = index % len(self.data_paths)
             if not self.data:
                 data = self.load_dataset(self.data_paths[self.data_index])
             else:
-                data = self.data[dataset_i]
+                data = self.data[self.data_index]
+            print(data)
             sample = {}
             sample['input_G'], sample['label_G'], sample['mask'] = (
                 data['imMRF'],
@@ -198,6 +197,7 @@ class BaseDataset(data.Dataset):
                 )
             sample = self.np2Tensor(sample)
         elif self.set_type == 'train':
+            dataset_i = index % len(self.data)
             start = time.time()
             sample = self.get_patch(dataset_i)
             sample = self.transform_train(sample)
