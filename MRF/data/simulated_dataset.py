@@ -28,6 +28,7 @@ class MRFDataset(BaseDataset):
     def read_mask(self, file):
         return file['immask'][:]
     
+    '''
     def preprocess_imMRF(self, imMRF, flip=True):
         if flip:
             # preprocess with flipping to align with ground truth tissue maps
@@ -44,7 +45,8 @@ class MRFDataset(BaseDataset):
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
         return A_img
-
+    '''
+    
     def get_paths(self):
         if self.opt.onMAC:
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20181017/SimulatedTrainingData/'
