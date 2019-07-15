@@ -20,7 +20,6 @@ import time
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
         self.flipimMRF = False
-        opt.preload_val_data = False
         self.initialize_base(opt)
         '''
         self.opt = opt
