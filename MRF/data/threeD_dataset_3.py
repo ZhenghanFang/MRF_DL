@@ -100,7 +100,11 @@ class MRFDataset(BaseDataset):
         if self.opt.onMAC:
             # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
-            # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
+            person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
+            slice_N_total = [144,176,160,176,176,160,160]
+            imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
+            Tmap_file_name = 'patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
+            mask_file_name = None
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
@@ -109,14 +113,17 @@ class MRFDataset(BaseDataset):
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190403/3DMRF_noSVD_GRAPP3_288pnts/'
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
             d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
+            person_path = ['190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6']
+            slice_N_total = [40,40,40]
+            imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
+            Tmap_file_name = 'patternmatching_noSVD.mat'
+            mask_file_name = 'mask.mat'
+        
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         # person_path = ['180408','180603','180722','180812_1','180812_2']
-        person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
-        # person_path = ['190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6']
         # slice_N = [94,94,94,94,94]
         # slice_N = [1,1,1,1,1]
-        slice_N_total = [144,176,160,176,176,160,160]
-        # slice_N_total = [40,40,40]
+        
         slice_N = [x - (self.opt.multi_slice_n-1) for x in slice_N_total]
         test_i = self.opt.test_i
         if self.opt.set_type == 'train':
@@ -137,12 +144,9 @@ class MRFDataset(BaseDataset):
         self.data_args = []
         self.data3D = {}
         for i in range(len(person)):
-            # imMRF_path = d_root+person_path[person[i]]+'/imMRF_AF2_PF_allpoints_noSVD.mat'
-            # Tmap_path = d_root+person_path[person[i]]+'/patternmatching_noSVD.mat'
-            # mask_path = d_root+person_path[person[i]]+'/mask.mat'
-            imMRF_path = d_root+person_path[person[i]]+'/imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
-            Tmap_path = d_root+person_path[person[i]]+'/patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
-            mask_path = None
+            imMRF_path = d_root+person_path[person[i]]+'/'+imMRF_file_name
+            Tmap_path  = d_root+person_path[person[i]]+'/'+Tmap_file_name
+            mask_path  = d_root+person_path[person[i]]+'/'+mask_file_name
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
                     'imMRF': imMRF_path,
@@ -155,7 +159,7 @@ class MRFDataset(BaseDataset):
             self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][0:self.n_timepoint]
             self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_all'][:]
             self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_all'][:]
-            if not mask_path:
+            if not mask_file_name:
                 self.data3D[imMRF_path]['mask'] = self.data3D[imMRF_path]['t1'] * 0.0 + 1.0
             else:
                 self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['mask'][:]
