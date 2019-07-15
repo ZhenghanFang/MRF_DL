@@ -91,16 +91,18 @@ parser.add_argument('--progressive_train', action='store_true', help='Progressiv
 parser.add_argument('--input_nc_prev', type=int, default=0, help='# of input image channels of the previous model (valid when progressive_train is True)')
 
 opt = parser.parse_args()
+type(opt)
 opt.isTrain = True
-host = subprocess.check_output('hostname').decode('utf-8')[:-1]
-if host == 'stilson' or host == 'andrew' or host == 'wiggin':
-    opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
-elif host == 'badin' or host == 'bogue' or host == 'burgaw':
-    opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
-elif host in ['danbury', 'denton', 'elkin', 'elkpark', 'dublin', 'dobson', 'eureka', 'erwin', 'enfield', 'elmcity']:
-    opt.checkpoints_dir = '/data/zhenghan/checkpoints'
-else:
-    raise ValueError("cannot decide checkpoints_dir, server '%s' not recognized." % host)
+if not opt.checkpoints_dir:
+    host = subprocess.check_output('hostname').decode('utf-8')[:-1]
+    if host == 'stilson' or host == 'andrew' or host == 'wiggin':
+        opt.checkpoints_dir = '/shenlab/lab_stor/zhenghan/checkpoints'
+    elif host == 'badin' or host == 'bogue' or host == 'burgaw':
+        opt.checkpoints_dir = '/shenlab/local/zhenghan/checkpoints'
+    elif host in ['danbury', 'denton', 'elkin', 'elkpark', 'dublin', 'dobson', 'eureka', 'erwin', 'enfield', 'elmcity']:
+        opt.checkpoints_dir = '/data/zhenghan/checkpoints'
+    else:
+        raise ValueError("cannot decide checkpoints_dir, server '%s' not recognized." % host)
 args = vars(opt)
 print('------------ Options -------------')
 for k, v in sorted(args.items()):
