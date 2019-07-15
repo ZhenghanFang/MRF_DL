@@ -18,6 +18,7 @@ from models import getModel
 # torch.backends.cudnn.enabled = False
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--checkpoints_dir', type=str, default='', help='directory to store training results')
 parser.add_argument('--T1hT2_predict_error', action='store_true', default=False, help='predict error or T2 map?')
 parser.add_argument('--T1hT2_dataroot', type=str, default='', help='data root for T1hT2')
 parser.add_argument('--zerobg', action='store_true', default=False, help='set background signal as zero?')
