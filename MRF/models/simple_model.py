@@ -40,7 +40,7 @@ class SimpleModel(BaseModel):
         if not self.isTrain or opt.continue_train:
             self.load_network(self.netG_A, opt.saved_model_path)
             
-        if self.opt.progressive_train:
+        if self.isTrain and self.opt.progressive_train:
             self.netG_A = networks.define_G(opt, opt.input_nc_prev, opt.output_nc,
                 opt.ngf, opt.which_model_netG, opt.norm, not opt.no_dropout, self.gpu_ids)
             self.load_network(self.netG_A, opt.saved_model_path)
