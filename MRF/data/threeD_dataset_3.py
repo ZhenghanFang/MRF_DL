@@ -20,7 +20,7 @@ import time
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
         self.flipimMRF = False
-        self.n_timepoint = self.opt.input_nc // self.opt.multi_slice_n // 2
+        self.n_timepoint = opt.input_nc // opt.multi_slice_n // 2
         self.initialize_base(opt)
         
 
