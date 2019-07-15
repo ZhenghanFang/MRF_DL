@@ -37,7 +37,7 @@ class MRFDataset(BaseDataset):
         A_img = imMRF
         A_img = numpy.concatenate((A_img['real'], A_img['imag']), axis=0).astype('float32')
         
-        # flip the real part of half of slices
+        # flip the real part for half of slices
         print(A_img)
         if random.random() > 0.5:
             A_img[0] = - A_img[0]
@@ -68,11 +68,12 @@ class MRFDataset(BaseDataset):
         ]
         slice_N = [10, 10, 10, 10, 10]
         # slice_N = [1,1,1,1,1,1]
-        test_i = 4
+        test_i = []
         if self.set_type == 'train':
-            person = list(range(0,test_i))+list(range(test_i+1,5))
+            person = list(set(range(len(person_path))) - set(test_i))
         elif self.set_type == 'val':
-            person = list(range(test_i,test_i+1))
+            person = test_i
+        print('person = ', person)
             
         self.data_paths = []
         for i in range(len(person)):
