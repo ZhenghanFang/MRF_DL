@@ -92,7 +92,7 @@ else:
 
 Model = getModel(opt)
 model = Model()
-model.initialize(opt)
+# model.initialize(opt)
 print("model [%s] was created" % (model.name()))
 
 MRFDataset = getDataset(opt)
