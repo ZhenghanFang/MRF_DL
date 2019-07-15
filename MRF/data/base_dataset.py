@@ -183,7 +183,8 @@ class BaseDataset(data.Dataset):
 
     def __getitem__(self, index):
         if self.set_type == 'val':
-            self.data_index = index % len(self.data_paths)
+            dataset_i = index % len(self.data_paths)
+            self.data_index = dataset_i
             if not self.data:
                 data = self.load_dataset(self.data_paths[self.data_index])
             else:
