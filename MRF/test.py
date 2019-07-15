@@ -63,7 +63,6 @@ parser.add_argument('--gradloss', action='store_true', default=False, help='add 
 
 parser.add_argument('--gan', action='store_true', default=False, help='use gan?')
 parser.add_argument('--multi_slice_n', type=int, default=3, help='number of slices as input (for 3D data)')
-parser.add_argument('--preload_val_data', default=True, help='load all validation data before training/testing?')
 
 
 opt = parser.parse_args()
