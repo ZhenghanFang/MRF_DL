@@ -146,7 +146,7 @@ class MRFDataset(BaseDataset):
         for i in range(len(person)):
             imMRF_path = d_root+person_path[person[i]]+'/'+imMRF_file_name
             Tmap_path  = d_root+person_path[person[i]]+'/'+Tmap_file_name
-            mask_path  = d_root+person_path[person[i]]+'/'+mask_file_name
+            mask_path  = d_root+person_path[person[i]]+'/'+mask_file_name if mask_file_name else None
             for j in range(slice_N[person[i]]):
                 self.data_paths.append({
                     'imMRF': imMRF_path,
