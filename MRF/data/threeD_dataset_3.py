@@ -19,7 +19,7 @@ import time
 
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
-        self.flipimMRF = False
+        self.flipimMRF = True
         self.n_timepoint = opt.input_nc // opt.multi_slice_n // 2
         self.initialize_base(opt)
         
@@ -67,7 +67,7 @@ class MRFDataset(BaseDataset):
         imMRF = numpy.reshape(imMRF, (-1, imMRF.shape[2], imMRF.shape[3]), order='F')
         
         if flip:
-            # preprocess with flipping to align with ground truth tissue maps
+            # flip to align with ground truth tissue maps
             imMRF = imMRF[:, ::-1, ::-1]
         # imMRF = numpy.flip(numpy.flip(imMRF,1),2)
         A_img = imMRF
