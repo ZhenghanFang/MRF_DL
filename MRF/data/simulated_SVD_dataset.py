@@ -27,6 +27,7 @@ class MRFDataset(BaseDataset):
     
     
     def preprocess_imMRF(self, imMRF, flip=True):
+        print(imMRF.shape)
         if flip:
             # preprocess with flipping to align with ground truth tissue maps
             imMRF = imMRF[:, ::-1, ::-1]
@@ -39,7 +40,6 @@ class MRFDataset(BaseDataset):
         else:
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
-        print(A_img.shape)
         return A_img
     
     
