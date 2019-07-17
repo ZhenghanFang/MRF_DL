@@ -2614,61 +2614,18 @@ class UniNet_init(nn.Module):
         super(UniNet_init, self).__init__()
         self.gpu_ids = gpu_ids
         
-        if opt.use_FNN:
-            Pre_T1 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Pre_T2 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Pre_T1 = Pre_T1.model
-            Pre_T2 = Pre_T2.model
-            Pre_T1._modules.popitem()
-            Pre_T2._modules.popitem()
+        Pre_T1 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        Pre_T2 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        Pre_T1 = Pre_T1.model
+        Pre_T2 = Pre_T2.model
+        Pre_T1._modules.popitem()
+        Pre_T2._modules.popitem()
 
-            num_D = Pre_T1[-3].out_channels
-        else:
-            Pre_T1, Pre_T2 = None, None
-            num_D = input_nc
+        num_D = Pre_T1[-3].out_channels
 
-        if opt.Unet_struc == '0ds':
-            Post_T1 = Unet_0ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_0ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == '1ds':
-            Post_T1 = Unet_1ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_1ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == '2ds':
-            Post_T1 = Unet_2ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_2ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == '3ds':
-            Post_T1 = Unet_3ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == '4ds':
-            Post_T1 = Unet_4ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_4ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Lian':
-            Post_T1 = Lian_SingleProperty_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Lian_SingleProperty_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == '3ds_dilate':
-            Post_T1 = Unet_3ds_dilate(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_dilate(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'RCAN':
-            Post_T1 = RCAN(opt, num_D)
-            Post_T2 = RCAN(opt, num_D)
-        elif opt.Unet_struc == 'Unet_2ds_skip':
-            Post_T1 = Unet_2ds_skip(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_2ds_skip(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Unet_3ds_subpixel':
-            Post_T1 = Unet_3ds_subpixel(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_subpixel(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Unet_3ds_compact':
-            Post_T1 = Unet_3ds_compact(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_compact(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Unet_3ds_deep':
-            Post_T1 = Unet_3ds_deep(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_deep(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Unet_3ds_rcab':
-            Post_T1 = Unet_3ds_rcab(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            Post_T2 = Unet_3ds_rcab(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        else:
-            raise ValueError('Unet_struc not recognized')
-            
+        Post_T1 = get_Unet_model(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        Post_T2 = get_Unet_model(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        
         self.model_T1 = nn.Sequential(Pre_T1,Post_T1)
         self.model_T2 = nn.Sequential(Pre_T2,Post_T2)
 
@@ -2676,19 +2633,44 @@ class UniNet_init(nn.Module):
         T1 = self.model_T1(input)
         T2 = self.model_T2(input)
         return torch.cat([T1, T2], 1)
+    
+def get_Unet_model(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids):
+    if opt.Unet_struc == '0ds':
+        Unet = Unet_0ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == '1ds':
+        Unet = Unet_1ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == '2ds':
+        Unet = Unet_2ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == '3ds':
+        Unet = Unet_3ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == '4ds':
+        Unet = Unet_4ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'Lian':
+        Unet = Lian_SingleProperty_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == '3ds_dilate':
+        Unet = Unet_3ds_dilate(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'RCAN':
+        Unet = RCAN(opt, input_nc)
+    elif opt.Unet_struc == 'Unet_2ds_skip':
+        Unet = Unet_2ds_skip(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'Unet_3ds_subpixel':
+        Unet = Unet_3ds_subpixel(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'Unet_3ds_compact':
+        Unet = Unet_3ds_compact(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'Unet_3ds_deep':
+        Unet = Unet_3ds_deep(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    elif opt.Unet_struc == 'Unet_3ds_rcab':
+        Unet = Unet_3ds_rcab(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+    else:
+        raise ValueError('Unet_struc not recognized')
+    return Unet
 
 class Unet_double(nn.Module):
     def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
         super(Unet_double, self).__init__()
         self.gpu_ids = gpu_ids
-        if opt.Unet_struc == '2ds':
-            self.model_T1 = Unet_2ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            self.model_T2 = Unet_2ds_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        elif opt.Unet_struc == 'Unet_3ds_rcab':
-            self.model_T1 = Unet_3ds_rcab(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-            self.model_T2 = Unet_3ds_rcab(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        else:
-            raise ValueError('Unet_struc not recognized')
+        self.model_T1 = get_Unet_model(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+        self.model_T2 = get_Unet_model(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
 
     def forward(self, input):
         T1 = self.model_T1(input)
