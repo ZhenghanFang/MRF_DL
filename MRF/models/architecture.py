@@ -2613,15 +2613,19 @@ class UniNet_init(nn.Module):
     def __init__(self, opt, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, gpu_ids=[]):
         super(UniNet_init, self).__init__()
         self.gpu_ids = gpu_ids
+        
+        if opt.use_FNN:
+            Pre_T1 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+            Pre_T2 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
+            Pre_T1 = Pre_T1.model
+            Pre_T2 = Pre_T2.model
+            Pre_T1._modules.popitem()
+            Pre_T2._modules.popitem()
 
-        Pre_T1 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        Pre_T2 = Net_1by1_struc(opt, input_nc, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
-        Pre_T1 = Pre_T1.model
-        Pre_T2 = Pre_T2.model
-        Pre_T1._modules.popitem()
-        Pre_T2._modules.popitem()
-
-        num_D = Pre_T1[-3].out_channels
+            num_D = Pre_T1[-3].out_channels
+        else:
+            Pre_T1, Pre_T2 = None, None
+            num_D = input_nc
 
         if opt.Unet_struc == '0ds':
             Post_T1 = Unet_0ds_struc(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
@@ -2664,7 +2668,7 @@ class UniNet_init(nn.Module):
             Post_T2 = Unet_3ds_rcab(opt, num_D, output_nc, ngf, norm_layer, use_dropout, gpu_ids)
         else:
             raise ValueError('Unet_struc not recognized')
-
+            
         self.model_T1 = nn.Sequential(Pre_T1,Post_T1)
         self.model_T2 = nn.Sequential(Pre_T2,Post_T2)
 
