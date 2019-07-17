@@ -118,6 +118,12 @@ class MRFDataset(BaseDataset):
             imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_noSVD.mat'
             mask_file_name = 'mask.mat'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
+            person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
+            slice_N_total = [144,176,160,176,176,160,160]
+            imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
+            Tmap_file_name = 'patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
+            mask_file_name = None
         
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         # person_path = ['180408','180603','180722','180812_1','180812_2']
