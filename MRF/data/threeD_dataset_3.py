@@ -19,7 +19,6 @@ import time
 
 class MRFDataset(BaseDataset):
     def initialize(self, opt):
-        self.flipimMRF = True
         self.n_timepoint = opt.input_nc // opt.multi_slice_n // 2
         self.initialize_base(opt)
         
@@ -110,6 +109,7 @@ class MRFDataset(BaseDataset):
             imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
             mask_file_name = None
+            self.flipimMRF = False
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
@@ -123,6 +123,7 @@ class MRFDataset(BaseDataset):
             imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_noSVD.mat'
             mask_file_name = 'mask.mat'
+            self.flipimMRF = True
             
         
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
