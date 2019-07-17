@@ -25,6 +25,8 @@ class MRFDataset(BaseDataset):
     def name(self):
         return 'simulated_SVD_Dataset'
     
+    def read_imMRF(self, file):
+        return file['imMRF'][:]
     
     def preprocess_imMRF(self, imMRF, flip=True):
         print(imMRF.shape)
