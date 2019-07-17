@@ -97,20 +97,19 @@ class MRFDataset(BaseDataset):
     '''
     
     def get_paths(self):
+        if self.opt.onMAC: 
+            MRF_data_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary'
+        else:
+            MRF_data_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary'
+            
         if self.opt.onMAC:
             # d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20180822/3DMRF/'
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
+            d_root = MRF_data_root + '/Data_20190415/3DMRF_prospective/Set2/'
             person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
             slice_N_total = [144,176,160,176,176,160,160]
             imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
             mask_file_name = None
-            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
-            person_path = ['190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6']
-            slice_N_total = [40,40,40]
-            imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
-            Tmap_file_name = 'patternmatching_noSVD.mat'
-            mask_file_name = 'mask.mat'
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
@@ -118,7 +117,7 @@ class MRFDataset(BaseDataset):
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190403/3DMRF_noSVD_GRAPP2_PF_288pnts/'
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190403/3DMRF_noSVD_GRAPP3_288pnts/'
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20190415/3DMRF_prospective/Set2/'
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
+            d_root = MRF_data_root + '/Data_3DMRF/3DMRF_noSVD_40slices/'
             person_path = ['190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6']
             slice_N_total = [40,40,40]
             imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
