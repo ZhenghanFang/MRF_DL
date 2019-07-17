@@ -105,7 +105,7 @@ class MRFDataset(BaseDataset):
             imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_GRAPPA2_PF_quarterpoints_noSVD.mat'
             mask_file_name = None
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
+            d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_3DMRF/3DMRF_noSVD_40slices/'
             person_path = ['190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6']
             slice_N_total = [40,40,40]
             imMRF_file_name = 'imMRF_AF2_PF_allpoints_noSVD.mat'
