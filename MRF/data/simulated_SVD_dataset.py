@@ -39,6 +39,7 @@ class MRFDataset(BaseDataset):
         else:
             t = numpy.mean(A_img ** 2, axis=0) * 2
             A_img = A_img / (t[numpy.newaxis,:,:] ** 0.5) / 36
+        print(A_img.shape)
         return A_img
     
     
