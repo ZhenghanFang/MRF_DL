@@ -31,7 +31,7 @@ class MRFDataset(BaseDataset):
         if self.opt.onMAC:
             d_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary/Data_20181017/Highres/'
         else:
-            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/highres/Highres/'
+            d_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary/Data_20181017/Highres/'
         person_path = ['180923_2', '181007', '181012-1', '181012-2', '181014-1', '181014-2']
         slice_path = [
             ['192', '199', '205', '211'],
