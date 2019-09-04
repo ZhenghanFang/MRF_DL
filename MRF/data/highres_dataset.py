@@ -46,7 +46,7 @@ class MRFDataset(BaseDataset):
         test_i = self.opt.test_i
         if self.set_type == 'train':
             # person = list(set(range(0,6)) - set([test_i]))
-            person = list(set(range(0,4)) - set([test_i]))
+            person = list(set(range(0,3)) - set([test_i]))
         elif self.set_type == 'val':
             person = [test_i]
             
