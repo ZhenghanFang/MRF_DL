@@ -131,7 +131,7 @@ class MRFDataset(BaseDataset):
             slice_N_total = [96,96,96,96,96]
             imMRF_file_name = 'imMRF_GRAPP2_PF_halfpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_SVD_PCA.mat'
-            mask_file_name = 'immask.mat'
+            mask_file_name = 'immask_h5.mat'
             self.flipimMRF = True
             
         
