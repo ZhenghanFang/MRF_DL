@@ -178,4 +178,4 @@ class MRFDataset(BaseDataset):
             if not mask_file_name:
                 self.data3D[imMRF_path]['mask'] = self.data3D[imMRF_path]['t1'] * 0.0 + 1.0
             else:
-                self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['mask'][:]
+                self.data3D[imMRF_path]['mask'] = h5py.File(mask_path, 'r')['immask'][:]
