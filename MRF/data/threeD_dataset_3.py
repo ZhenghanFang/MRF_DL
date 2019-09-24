@@ -130,7 +130,7 @@ class MRFDataset(BaseDataset):
             person_path = ['180408_3DMRF/88', '180603_3DMRF/204', '180772_3DMRF/data154', '180812_3DMRF_vol/data140/140' '180812_3DMRF_vol/data173']
             slice_N_total = [96,96,96,96,96]
             imMRF_file_name = 'imMRF_GRAPP2_PF_halfpoints_noSVD.mat'
-            Tmap_file_name = 'patternmatching_SVD_PCA_full.mat'
+            Tmap_file_name = 'patternmatching_SVD_PCA.mat'
             mask_file_name = 'immask.mat'
             self.flipimMRF = True
             
