@@ -103,8 +103,8 @@ class MRFDataset(BaseDataset):
             MRF_data_root = '/data/fengcheng/MRF'
             
         if self.opt.onMAC:
-            d_root = MRF_data_root + '/Data_20190415/3DMRF_prospective/Set1/'
-            person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
+            # d_root = MRF_data_root + '/Data_20190415/3DMRF_prospective/Set1/'
+            # person_path = ['190324_DLMRF3D_vol1','190324_DLMRF3D_vol2','190328_DLMRF3D_vol3','190330_DLMRF3D_vol4','190330_DLMRF3D_vol5','190407_DLMRF3D_vol6','190407_DLMRF3D_vol7']
             '''
             slice_N_total = [144,176,160,176,176,160,160]
             imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
@@ -112,11 +112,20 @@ class MRFDataset(BaseDataset):
             mask_file_name = None
             self.flipimMRF = False
             '''
+            '''
             slice_N_total = [144] * 7
             imMRF_file_name = 'imMRF_GRAPP2_PF_quarterpoints_noSVD.mat'
             Tmap_file_name = 'patternmatching_SVD_PCA.mat'
             mask_file_name = 'immask.mat'
             self.flipimMRF = False
+            '''
+            d_root = MRF_data_root
+            person_path = ['']
+            slice_N_total = [6]
+            imMRF_file_name = 'imMRF_GRAPP2_PF_192points_noSVD_par31_36.mat'
+            Tmap_file_name = imMRF_file_name
+            mask_file_name = None
+            self.flipimMRF = True
         else:
             # d_root = '/shenlab/lab_stor/zhenghan/data/MRF/3D/'
             # d_root = '/shenlab/lab_stor/zhenghan/3DMRF_noSVD_R3_192pnts/'
