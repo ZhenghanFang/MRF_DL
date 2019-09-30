@@ -184,8 +184,8 @@ class MRFDataset(BaseDataset):
             print('loading data:', imMRF_path)
             self.data3D[imMRF_path] = {}
             self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_part'][0:self.n_timepoint]
-            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1bigc_all'][:]
-            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2bigc_all'][:]
+            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_c'][:]
+            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_c'][:]
             if not mask_file_name:
                 self.data3D[imMRF_path]['mask'] = self.data3D[imMRF_path]['t1'] * 0.0 + 1.0
             else:
