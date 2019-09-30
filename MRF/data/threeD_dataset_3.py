@@ -99,8 +99,8 @@ class MRFDataset(BaseDataset):
         if self.opt.onMAC: 
             MRF_data_root = '/Users/zhenghanfang/Desktop/standard_MRF/DataNewDictionary'
         else:
-            MRF_data_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary'
-            # MRF_data_root = '/data/fengcheng/MRF'
+            # MRF_data_root = '/shenlab/lab_stor/zhenghan/data/MRF/DataNewDictionary'
+            MRF_data_root = '/data/fengcheng/MRF'
             
         if self.opt.onMAC:
             # d_root = MRF_data_root + '/Data_20190415/3DMRF_prospective/Set1/'
@@ -136,7 +136,7 @@ class MRFDataset(BaseDataset):
             Tmap_file_name = 'patternmatching_SVD_PCA.mat'
             mask_file_name = 'immask_h5.mat'
             self.flipimMRF = True
-            
+            '''
             d_root = MRF_data_root
             person_path = ['']
             slice_N_total = [6]
@@ -144,7 +144,7 @@ class MRFDataset(BaseDataset):
             Tmap_file_name = imMRF_file_name
             mask_file_name = None
             self.flipimMRF = True
-            
+            '''
         
         # person_path = ['1_180410','2_180603','3_180722','4_180812_1','5_180812_2']
         # person_path = ['180408','180603','180722','180812_1','180812_2']
@@ -183,9 +183,9 @@ class MRFDataset(BaseDataset):
                 self.data_args.append({'slice_i': j})
             print('loading data:', imMRF_path)
             self.data3D[imMRF_path] = {}
-            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_part'][0:self.n_timepoint]
-            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1big_c'][:]
-            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2big_c'][:]
+            self.data3D[imMRF_path]['imMRF'] = h5py.File(imMRF_path, 'r')['imMRF_all'][0:self.n_timepoint]
+            self.data3D[imMRF_path]['t1'] = h5py.File(Tmap_path, 'r')['t1bigc_all'][:]
+            self.data3D[imMRF_path]['t2'] = h5py.File(Tmap_path, 'r')['t2bigc_all'][:]
             if not mask_file_name:
                 self.data3D[imMRF_path]['mask'] = self.data3D[imMRF_path]['t1'] * 0.0 + 1.0
             else:
