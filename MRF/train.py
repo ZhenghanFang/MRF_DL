@@ -155,7 +155,7 @@ elif opt.gpu_ids == '-2':
 else:
     opt.gpu_ids=opt.gpu_ids.split(',')
 print(util.get_vacant_gpu())
-print(opt.gpu_ids.split(','))
+print(opt.gpu_ids)
 print('select gpu # ', opt.gpu_ids)
 
 model.initialize(opt)
