@@ -151,11 +151,8 @@ elif opt.gpu_ids == '-2':
     gpu_id = util.get_vacant_gpu()
     torch.cuda.set_device(gpu_id)
     opt.gpu_ids=[gpu_id]
-    print(opt.gpu_ids)
 else:
-    opt.gpu_ids=int(opt.gpu_ids)
-print(util.get_vacant_gpu())
-print(opt.gpu_ids)
+    opt.gpu_ids=[int(opt.gpu_ids)]
 print('select gpu # ', opt.gpu_ids)
 
 model.initialize(opt)
