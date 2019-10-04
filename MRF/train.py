@@ -128,22 +128,22 @@ MRFDataset = getDataset(opt)
 
 opt.set_type = 'train'
 dataset_train = MRFDataset()
-# dataset_train.initialize(opt)
-# dataloader_train = torch.utils.data.DataLoader(dataset_train, 
-#     batch_size=opt.batchSize, shuffle=True, num_workers=int(opt.nThreads))
-# dataloader_train.dataset.patchSize = opt.patchSize
-# print("dataset_train [%s] was created" % (dataset_train.name()))
+dataset_train.initialize(opt)
+dataloader_train = torch.utils.data.DataLoader(dataset_train, 
+    batch_size=opt.batchSize, shuffle=True, num_workers=int(opt.nThreads))
+dataloader_train.dataset.patchSize = opt.patchSize
+print("dataset_train [%s] was created" % (dataset_train.name()))
 
 # dataloader_train_val = torch.utils.data.DataLoader(dataset_train, 
 #     batch_size=1, shuffle=False, num_workers=1)
 
 opt.set_type = 'val'
 dataset_test = MRFDataset()
-# dataset_test.initialize(opt)
-# dataloader_val = torch.utils.data.DataLoader(dataset_test, 
-#     batch_size=1, shuffle=False, num_workers=0)
-# dataloader_val.dataset.patchSize = 0
-# print("dataset_test [%s] was created" % (dataset_test.name()))
+dataset_test.initialize(opt)
+dataloader_val = torch.utils.data.DataLoader(dataset_test, 
+    batch_size=1, shuffle=False, num_workers=0)
+dataloader_val.dataset.patchSize = 0
+print("dataset_test [%s] was created" % (dataset_test.name()))
 
 if opt.gpu_ids == '-1':
     opt.gpu_ids = []
