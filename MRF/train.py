@@ -128,7 +128,7 @@ MRFDataset = getDataset(opt)
 
 opt.set_type = 'train'
 dataset_train = MRFDataset()
-dataset_train.initialize(opt)
+# dataset_train.initialize(opt)
 dataloader_train = torch.utils.data.DataLoader(dataset_train, 
     batch_size=opt.batchSize, shuffle=True, num_workers=int(opt.nThreads))
 dataloader_train.dataset.patchSize = opt.patchSize
@@ -139,7 +139,7 @@ print("dataset_train [%s] was created" % (dataset_train.name()))
 
 opt.set_type = 'val'
 dataset_test = MRFDataset()
-dataset_test.initialize(opt)
+# dataset_test.initialize(opt)
 dataloader_val = torch.utils.data.DataLoader(dataset_test, 
     batch_size=1, shuffle=False, num_workers=0)
 dataloader_val.dataset.patchSize = 0
@@ -151,8 +151,11 @@ elif opt.gpu_ids == '-2':
     gpu_id = util.get_vacant_gpu()
     torch.cuda.set_device(gpu_id)
     opt.gpu_ids=[gpu_id]
+    print(opt.gpu_ids)
 else:
     opt.gpu_ids=opt.gpu_ids.split(',')
+print(util.get_vacant_gpu())
+print(opt.gpu_ids.split(','))
 print('select gpu # ', opt.gpu_ids)
 
 model.initialize(opt)
